@@ -10,7 +10,7 @@ export default () => {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const nodeTypes = ["setVariable", "adjustQuantity", "conditional"]; // Add other node types here
+  const nodeTypes = ["setVariable", "adjustQuantity", "conditional", "group"]; // Add other node types here
 
   return (
     <aside>

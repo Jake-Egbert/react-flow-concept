@@ -14,6 +14,7 @@ import Sidebar from "./Sidebar";
 import SetVariableNode from "./components/customNodes/SetVariableNode";
 import AdjustQuantityNode from "./components/customNodes/AdjustQuantityNode";
 import ConditionalNode from "./components/customNodes/ConditionalNode";
+import GroupNode from "./components/customNodes/GroupNode";
 import { DnDProvider, useDnD } from "./DnDContext";
 
 import "./index.css";
@@ -23,6 +24,7 @@ const nodeTypes = {
   setVariable: SetVariableNode,
   adjustQuantity: AdjustQuantityNode,
   conditional: ConditionalNode,
+  group: GroupNode,
 };
 
 let id = 0;
