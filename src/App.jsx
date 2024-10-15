@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from "react";
+import React, { useRef, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -33,9 +33,56 @@ const getId = () => `dndnode_${id++}`;
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-  const { screenToFlowPosition } = useReactFlow();
+  const [edges, setEdges] = useEdgesState([]);
+  const { screenToFlowPosition, getNodes } = useReactFlow();
   const [type] = useDnD();
+
+  const checkGroups = useCallback(() => {
+    const groupNodes = getNodes().filter((node) => node.type === "group");
+    console.log(groupNodes);
+    groupNodes.forEach((groupNode) => {
+      const children = getNodes().filter((child) => child.parentId === "");
+      console.log(children);
+      children.forEach((child) => {
+        console.log(child);
+        if (child.type !== "group") {
+          if (isChildInGroup(child, groupNode)) {
+            child.parentId = groupNode.id;
+          }
+        }
+      });
+    });
+  }, [getNodes]);
+
+  const isChildInGroup = (child, group) => {
+    console.log("child", child);
+    const childRect = {
+      x: child.position.x,
+      y: child.position.y,
+      width: child.measured && child.measured.width ? child.measured.width : 0,
+      height:
+        child.measured && child.measured.height ? child.measured.height : 0,
+    };
+
+    const groupRect = {
+      x: group.position.x,
+      y: group.position.y,
+      width: group.measured && group.measured.width ? group.measured.width : 0,
+      height:
+        group.measured && group.measured.height ? group.measured.height : 0,
+    };
+
+    return (
+      childRect.x >= groupRect.x &&
+      childRect.x + childRect.width <= groupRect.x + groupRect.width &&
+      childRect.y >= groupRect.y &&
+      childRect.y + childRect.height <= groupRect.y + groupRect.height
+    );
+  };
+
+  useEffect(() => {
+    checkGroups();
+  }, [nodes]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -48,10 +95,10 @@ const DnDFlow = () => {
   }, []);
 
   const onDrop = useCallback(
-    (event) => {
+    async (event) => {
       event.preventDefault();
 
-      if (!type) {
+      if (!type || !reactFlowWrapper.current) {
         return;
       }
 
@@ -65,11 +112,12 @@ const DnDFlow = () => {
         type: type,
         position,
         data: { label: `${type.charAt(0).toUpperCase() + type.slice(1)} node` },
+        parentId: "",
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [screenToFlowPosition, type]
+    [type, reactFlowWrapper.current]
   );
 
   return (
@@ -79,7 +127,6 @@ const DnDFlow = () => {
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
-          onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
           onDragOver={onDragOver}

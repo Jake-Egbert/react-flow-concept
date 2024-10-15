@@ -1,14 +1,16 @@
-import { useEffect, useCallback } from "react";
-import { NodeResizer } from "@xyflow/react";
+import React from "react";
+import { NodeResizer, Handle } from "@xyflow/react";
 
-const GroupNode = ({ data }) => {
+const GroupNode = ({ data, children }) => {
   return (
     <div className="group-node">
-      <h3>{data.label}</h3>
-      <NodeResizer color="#ff0071" minWidth={200} minHeight={50} />
-      <div className="group-drag-handle" draggable>
-        Drag nodes here
-      </div>
+      <div className="group-label">{data.label}</div>
+      <NodeResizer />
+      <Handle type="target" position="top" />
+      <Handle type="source" position="bottom" />
+      {children?.map((childId) => (
+        <ReactFlow.Node key={childId} id={childId} parentId={data.id} />
+      ))}
     </div>
   );
 };
