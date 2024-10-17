@@ -1,4 +1,4 @@
-import React, { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   ReactFlowProvider,
@@ -39,23 +39,39 @@ const DnDFlow = () => {
 
   const checkGroups = useCallback(() => {
     const groupNodes = getNodes().filter((node) => node.type === "group");
-    console.log(groupNodes);
-    groupNodes.forEach((groupNode) => {
-      const children = getNodes().filter((child) => child.parentId === "");
-      console.log(children);
-      children.forEach((child) => {
-        console.log(child);
-        if (child.type !== "group") {
-          if (isChildInGroup(child, groupNode)) {
-            child.parentId = groupNode.id;
+    let shouldUpdate = false;
+
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (node.type !== "group") {
+          const parentGroup = groupNodes.find((groupNode) =>
+            isChildInGroup(node, groupNode)
+          );
+
+          if (parentGroup && node.parentId !== parentGroup.id) {
+            shouldUpdate = true;
+
+            return {
+              ...node,
+              parentId: parentGroup.id,
+              position: {
+                x: node.position.x - parentGroup.position.x,
+                y: node.position.y - parentGroup.position.y,
+              },
+              extent: "parent",
+            };
           }
         }
-      });
-    });
-  }, [getNodes]);
+        return node;
+      })
+    );
 
-  const isChildInGroup = (child, group) => {
-    console.log("child", child);
+    if (shouldUpdate) {
+      setNodes((nds) => [...nds]);
+    }
+  }, [getNodes, setNodes]);
+
+  const isChildInGroup = useCallback((child, group) => {
     const childRect = {
       x: child.position.x,
       y: child.position.y,
@@ -78,11 +94,11 @@ const DnDFlow = () => {
       childRect.y >= groupRect.y &&
       childRect.y + childRect.height <= groupRect.y + groupRect.height
     );
-  };
+  }, []);
 
   useEffect(() => {
     checkGroups();
-  }, [nodes]);
+  }, [nodes, checkGroups]);
 
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
@@ -117,7 +133,7 @@ const DnDFlow = () => {
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [type, reactFlowWrapper.current]
+    [type, screenToFlowPosition, setNodes]
   );
 
   return (
