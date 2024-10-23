@@ -23,7 +23,7 @@ function ConditionalNode() {
         <option value="fs">True</option>
         <option value="fs">False</option>
       </select>
-      <Handle type="source" position={Position.Right} id="b" />
+      <Handle type="source" position={Position.Right} id="8" />
     </div>
   );
 }
