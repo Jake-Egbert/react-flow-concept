@@ -40,3 +40,9 @@
 .read-the-docs {
   color: #888;
 }
+
+canvas {
+  display: none;
+  width: 640px;
+  height: 480px;
+}

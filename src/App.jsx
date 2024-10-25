@@ -11,6 +11,7 @@ import {
 import "@xyflow/react/dist/style.css";
 
 import Sidebar from "./Sidebar";
+import QRScanner from "./QRScanner";
 import SetVariableNode from "./components/customNodes/SetVariableNode";
 import AdjustQuantityNode from "./components/customNodes/AdjustQuantityNode";
 import ConditionalNode from "./components/customNodes/ConditionalNode";
@@ -32,6 +33,7 @@ const getId = () => `dndnode_${id++}`;
 
 const DnDFlow = () => {
   const reactFlowWrapper = useRef(null);
+  // const [cameraIsOpen, setCameraIsOpen] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition, getNodes } = useReactFlow();
@@ -153,6 +155,8 @@ const DnDFlow = () => {
         </ReactFlow>
       </div>
       <Sidebar />
+      {/* <button onClick={setCameraIsOpen((prev) => !prev)}>Camera</button> */}
+      {<QRScanner />}
     </div>
   );
 };
