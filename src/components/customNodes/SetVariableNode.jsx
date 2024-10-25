@@ -1,41 +1,40 @@
 import { memo, useEffect, useState, useRef } from "react";
-import { Handle, useUpdateNodeInternals } from "@xyflow/react";
-import { useDnD } from "../../DnDContext";
+import { Handle, useUpdateNodeInternals, Position } from "@xyflow/react";
+import { useFlow } from "../../FlowContext";
 
 function SetVariableNode({ id }) {
   const [localHandles, setLocalHandles] = useState([]);
-  const [type, setType, contextHandles, setHandles] = useDnD();
+  const { contextHandles } = useFlow();
   const updateNodeInternals = useUpdateNodeInternals();
 
   const initialContextHandles = useRef(contextHandles);
 
   useEffect(() => {
     const initialHandles = [];
-    let handleId = 0;
 
     if (initialContextHandles.current.top)
       initialHandles.push({
-        id: `top-${handleId++}`,
-        position: "top",
+        position: Position.Top,
         type: "target",
+        id: "top",
       });
     if (initialContextHandles.current.left)
       initialHandles.push({
-        id: `left-${handleId++}`,
-        position: "left",
+        position: Position.Left,
         type: "target",
+        id: "left",
       });
     if (initialContextHandles.current.right)
       initialHandles.push({
-        id: `right-${handleId++}`,
-        position: "right",
+        position: Position.Right,
         type: "source",
+        id: "right",
       });
     if (initialContextHandles.current.bottom)
       initialHandles.push({
-        id: `bottom-${handleId++}`,
-        position: "bottom",
+        position: Position.Bottom,
         type: "source",
+        id: "bottom",
       });
 
     setLocalHandles(initialHandles);
@@ -47,18 +46,14 @@ function SetVariableNode({ id }) {
 
   return (
     <div className="text-updater-node">
-      {localHandles.map(
-        (handle) => (
-          console.log(handle),
-          (
-            <Handle
-              key={handle.id}
-              type={handle.type}
-              position={handle.position}
-            />
-          )
-        )
-      )}
+      {localHandles.map((handle, index) => (
+        <Handle
+          key={index}
+          type={handle.type}
+          position={handle.position}
+          id={handle.id}
+        />
+      ))}
       <label htmlFor="text">Text:</label>
       <input id="text" name="text" className="nodrag" />
       <select>

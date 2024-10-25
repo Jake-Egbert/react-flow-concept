@@ -1,7 +1,7 @@
-import { useDnD } from "./DnDContext";
+import { useFlow } from "./FlowContext";
 
 export default function Sidebar() {
-  const [_, setType, contextHandles, setContextHandles] = useDnD();
+  const { setType, setContextHandles } = useFlow();
 
   const handleChange = (e) => {
     const { name } = e.target;
