@@ -37,8 +37,8 @@ const Flow = () => {
     const groupNodes = getNodes().filter((node) => node.type === "group");
     let shouldUpdate = false;
 
-    setNodes((nds) =>
-      nds.map((node) => {
+    setNodes((nds) => {
+      const updatedNodes = nds.map((node) => {
         if (node.type !== "group") {
           const parentGroup = groupNodes.find((groupNode) =>
             isChildInGroup(node, groupNode)
@@ -59,29 +59,33 @@ const Flow = () => {
           }
         }
         return node;
-      })
-    );
+      });
 
-    if (shouldUpdate) {
-      setNodes((nds) => [...nds]);
-    }
+      if (shouldUpdate) {
+        const groupFirst = [
+          ...groupNodes,
+          ...updatedNodes.filter((n) => n.type !== "group"),
+        ];
+        return groupFirst;
+      }
+
+      return nds;
+    });
   }, [getNodes, setNodes]);
 
   const isChildInGroup = useCallback((child, group) => {
     const childRect = {
       x: child.position.x,
       y: child.position.y,
-      width: child.measured && child.measured.width ? child.measured.width : 0,
-      height:
-        child.measured && child.measured.height ? child.measured.height : 0,
+      width: child.measured?.width || 100,
+      height: child.measured?.height || 100,
     };
 
     const groupRect = {
       x: group.position.x,
       y: group.position.y,
-      width: group.measured && group.measured.width ? group.measured.width : 0,
-      height:
-        group.measured && group.measured.height ? group.measured.height : 0,
+      width: group.measured?.width || 100,
+      height: group.measured?.height || 100,
     };
 
     return (
