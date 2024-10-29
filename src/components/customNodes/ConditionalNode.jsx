@@ -1,11 +1,9 @@
 import { memo } from "react";
-import { Handle, Position } from "@xyflow/react";
+import BaseNode from "./BaseNode";
 
-function ConditionalNode() {
+const ConditionalNode = ({ id }) => {
   return (
-    <div className="text-updater-node">
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Bottom} />
+    <BaseNode id={id}>
       <h3>Conditional</h3>
       <select>
         <option value="boots">spokeToMayor</option>
@@ -24,9 +22,8 @@ function ConditionalNode() {
         <option value="fs">True</option>
         <option value="fs">False</option>
       </select>
-      <Handle type="source" position={Position.Right} id="8" />
-    </div>
+    </BaseNode>
   );
-}
+};
 
 export default memo(ConditionalNode);
