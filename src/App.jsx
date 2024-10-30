@@ -1,4 +1,6 @@
-import { Route, Switch, BrowserRouter, Redirect } from "react-router-dom";
+import { useEffect } from "react";
+import { Route, Switch, Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import Flow from "./components/Flow";
 import ChallengePage from "./components/pages/ChallengePage";
@@ -6,16 +8,26 @@ import PresentationPage from "./components/pages/PresentationPage";
 import "./styles/custom-nodes/set-variable.css";
 
 const App = () => {
+  const history = useHistory();
+
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.location.reload();
+    });
+
+    return () => {
+      unlisten();
+    };
+  }, [history]);
+
   return (
     <div className="app">
-      <BrowserRouter>
-        <Switch>
-          <Redirect exact from="/" to="/flow" />
-          <Route path="/flow" component={Flow} />
-          <Route path="/challenge-page" component={ChallengePage} />
-          <Route path="/presentation-page" component={PresentationPage} />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <Redirect exact from="/" to="/flow" />
+        <Route path="/flow" component={Flow} />
+        <Route path="/challenge-page" component={ChallengePage} />
+        <Route path="/presentation-page" component={PresentationPage} />
+      </Switch>
     </div>
   );
 };

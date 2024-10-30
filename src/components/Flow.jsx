@@ -15,6 +15,7 @@ import AdjustQuantityNode from "../components/customNodes/AdjustQuantityNode";
 import ConditionalNode from "../components/customNodes/ConditionalNode";
 import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
+import ChallengeNode from "./customNodes/ChallengeNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
@@ -22,6 +23,7 @@ const nodeTypes = {
   presentation: PresentationNode,
   conditional: ConditionalNode,
   setVariable: SetVariableNode,
+  challenge: ChallengeNode,
   group: GroupNode,
 };
 

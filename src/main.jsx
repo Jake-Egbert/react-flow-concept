@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { ReactFlowProvider } from "@xyflow/react";
+import { BrowserRouter } from "react-router-dom/cjs/react-router-dom.min.js";
 import Modal from "react-modal";
 
 import { FlowProvider } from "./FlowContext.jsx";
@@ -11,10 +12,12 @@ Modal.setAppElement("#root");
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <ReactFlowProvider>
-      <FlowProvider>
-        <App />
-      </FlowProvider>
-    </ReactFlowProvider>
+    <BrowserRouter>
+      <ReactFlowProvider>
+        <FlowProvider>
+          <App />
+        </FlowProvider>
+      </ReactFlowProvider>
+    </BrowserRouter>
   </StrictMode>
 );

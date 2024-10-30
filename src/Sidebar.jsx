@@ -23,6 +23,7 @@ export default function Sidebar() {
     "conditional",
     "group",
     "presentation",
+    "challenge",
   ];
 
   return (

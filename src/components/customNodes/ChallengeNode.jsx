@@ -3,7 +3,7 @@ import { NodeToolbar } from "@xyflow/react";
 import CustomModal from "../modals/Modal";
 import BaseNode from "./BaseNode";
 
-const PresentationNode = ({ id, data }) => {
+const ChallengeNode = ({ id, data }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleOpenModal = () => {
@@ -23,16 +23,16 @@ const PresentationNode = ({ id, data }) => {
           <button onClick={handleOpenModal}>Edit</button>
         </NodeToolbar>
         <select>
-          <option value="boolean">Home</option>
-          <option value="text">Menu 1</option>
-          <option value="number">Introduction</option>
+          <option value="boolean">Sheriff Showdown</option>
+          <option value="text">Mind Bender</option>
+          <option value="number">Order Pictures</option>
         </select>
       </BaseNode>
       {isEditing && (
         <CustomModal
           isOpen={isEditing}
           onRequestClose={handleCloseModal}
-          endpoint={"/presentation-page"}
+          endpoint={"/challenge-page"}
           key={id}
         />
       )}
@@ -40,4 +40,4 @@ const PresentationNode = ({ id, data }) => {
   );
 };
 
-export default memo(PresentationNode);
+export default memo(ChallengeNode);
