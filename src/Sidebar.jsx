@@ -17,7 +17,13 @@ export default function Sidebar() {
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const nodeTypes = ["setVariable", "adjustQuantity", "conditional", "group"];
+  const nodeTypes = [
+    "setVariable",
+    "adjustQuantity",
+    "conditional",
+    "group",
+    "presentation",
+  ];
 
   return (
     <aside>

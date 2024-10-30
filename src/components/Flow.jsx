@@ -14,12 +14,14 @@ import SetVariableNode from "../components/customNodes/SetVariableNode";
 import AdjustQuantityNode from "../components/customNodes/AdjustQuantityNode";
 import ConditionalNode from "../components/customNodes/ConditionalNode";
 import GroupNode from "../components/customNodes/GroupNode";
+import PresentationNode from "./customNodes/PresentationNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
-  setVariable: SetVariableNode,
   adjustQuantity: AdjustQuantityNode,
+  presentation: PresentationNode,
   conditional: ConditionalNode,
+  setVariable: SetVariableNode,
   group: GroupNode,
 };
 

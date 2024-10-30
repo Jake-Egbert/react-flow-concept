@@ -1,7 +1,7 @@
 import { memo } from "react";
 import BaseNode from "./BaseNode";
 
-function AdjustQuantityNode() {
+function AdjustQuantityNode({ id }) {
   return (
     <BaseNode id={id}>
       <div className="text-updater-node">
