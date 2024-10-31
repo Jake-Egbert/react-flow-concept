@@ -2,7 +2,6 @@ import { useRef, useCallback, useEffect } from "react";
 import {
   ReactFlow,
   addEdge,
-  useNodesState,
   useEdgesState,
   Controls,
   useReactFlow,
@@ -32,10 +31,9 @@ const getId = () => `dndnode_${id++}`;
 
 const Flow = () => {
   const reactFlowWrapper = useRef(null);
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition, getNodes } = useReactFlow();
-  const { type } = useFlow();
+  const { type, nodes, setNodes, onNodesChange } = useFlow();
 
   const checkGroups = useCallback(() => {
     const groupNodes = getNodes().filter((node) => node.type === "group");
@@ -131,7 +129,9 @@ const Flow = () => {
         id: getId(),
         type: type,
         position,
-        data: { label: `${type.charAt(0).toUpperCase() + type.slice(1)} node` },
+        data: {
+          label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
+        },
         parentId: "",
       };
 

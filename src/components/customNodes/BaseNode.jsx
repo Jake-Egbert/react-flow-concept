@@ -2,12 +2,19 @@ import { useState, useRef, useEffect, memo } from "react";
 import { Handle, Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 
-const BaseNode = ({ id, children }) => {
+import NodeTypeSelector from "../NodeTypeSelector";
+
+const BaseNode = ({ id, children, type }) => {
   const [localHandles, setLocalHandles] = useState([]);
   const { contextHandles } = useFlow();
   const updateNodeInternals = useUpdateNodeInternals();
 
   const initialContextHandles = useRef(contextHandles);
+  const currentNodeType = useRef(type);
+
+  useEffect(() => {
+    currentNodeType.current = type;
+  }, [type]);
 
   useEffect(() => {
     const initialHandles = [];
@@ -46,6 +53,11 @@ const BaseNode = ({ id, children }) => {
 
   return (
     <div className="text-updater-node">
+      <NodeTypeSelector
+        nodeId={id}
+        currentType={currentNodeType.current}
+        availableTypes={["presentation", "other_type"]}
+      />
       {localHandles.map((handle, index) => (
         <Handle
           key={index}

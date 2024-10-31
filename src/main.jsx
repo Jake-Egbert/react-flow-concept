@@ -12,12 +12,12 @@ Modal.setAppElement("#root");
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-      <ReactFlowProvider>
+    <ReactFlowProvider>
+      <BrowserRouter>
         <FlowProvider>
           <App />
         </FlowProvider>
-      </ReactFlowProvider>
-    </BrowserRouter>
+      </BrowserRouter>
+    </ReactFlowProvider>
   </StrictMode>
 );
