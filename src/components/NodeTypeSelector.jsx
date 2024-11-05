@@ -1,15 +1,12 @@
 import { useState } from "react";
-
 import { useFlow } from "../FlowContext";
 
 const NodeTypeSelector = ({ nodeId, currentType }) => {
   const [isSelecting, setIsSelecting] = useState(false);
-  const [type, setType] = useState(currentType);
 
   const { setNodes } = useFlow();
 
   const handleTypeChange = (newType) => {
-    setType(newType);
     setNodes((nds) =>
       nds?.map((node) =>
         node.id === nodeId
@@ -24,7 +21,10 @@ const NodeTypeSelector = ({ nodeId, currentType }) => {
     <div>
       <button onClick={() => setIsSelecting(!isSelecting)}>+</button>
       {isSelecting && (
-        <select value={type} onChange={(e) => handleTypeChange(e.target.value)}>
+        <select
+          value={currentType}
+          onChange={(e) => handleTypeChange(e.target.value)}
+        >
           <option value="presentation">Presentation</option>
           <option value="adjustQuantity">Adjust Quantity</option>
           <option value="conditional">Conditional</option>

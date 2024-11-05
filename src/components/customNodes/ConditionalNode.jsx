@@ -3,7 +3,7 @@ import BaseNode from "./BaseNode";
 
 const ConditionalNode = ({ id }) => {
   return (
-    <BaseNode id={id}>
+    <BaseNode id={id} type={type}>
       <h3>Conditional</h3>
       <select>
         <option value="boots">spokeToMayor</option>

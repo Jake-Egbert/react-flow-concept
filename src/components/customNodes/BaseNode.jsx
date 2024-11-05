@@ -13,7 +13,9 @@ const BaseNode = ({ id, children, type }) => {
   const currentNodeType = useRef(type);
 
   useEffect(() => {
+    console.log(type);
     currentNodeType.current = type;
+    console.log(currentNodeType);
   }, [type]);
 
   useEffect(() => {

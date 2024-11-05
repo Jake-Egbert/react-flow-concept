@@ -1,9 +1,9 @@
 import { memo } from "react";
 import BaseNode from "./BaseNode";
 
-function AdjustQuantityNode({ id }) {
+function AdjustQuantityNode({ id, type }) {
   return (
-    <BaseNode id={id}>
+    <BaseNode id={id} type={type}>
       <div className="text-updater-node">
         <h3>Adjust Quantity</h3>
         <select>

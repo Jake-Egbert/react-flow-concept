@@ -3,7 +3,7 @@ import { NodeToolbar } from "@xyflow/react";
 import CustomModal from "../modals/Modal";
 import BaseNode from "./BaseNode";
 
-const ChallengeNode = ({ id, data }) => {
+const ChallengeNode = ({ id, data, type }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleOpenModal = () => {
@@ -18,7 +18,8 @@ const ChallengeNode = ({ id, data }) => {
 
   return (
     <>
-      <BaseNode id={id}>
+      <BaseNode id={id} type={type}>
+        <h3>Challenge</h3>
         <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
           <button onClick={handleOpenModal}>Edit</button>
         </NodeToolbar>
