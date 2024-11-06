@@ -1,6 +1,6 @@
 import { useFlow } from "./FlowContext";
 
-export default function Sidebar() {
+export default function Sidebar({ handleClick }) {
   const { setType, setContextHandles } = useFlow();
 
   const handleChange = (e) => {
@@ -55,6 +55,7 @@ export default function Sidebar() {
         <div
           key={type}
           className={`dndnode ${type}`}
+          onClick={() => handleClick(type)}
           onDragStart={(event) => onDragStart(event, type)}
           draggable
         >

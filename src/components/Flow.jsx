@@ -140,6 +140,30 @@ const Flow = () => {
     [type, screenToFlowPosition, setNodes]
   );
 
+  const handleClick = useCallback(
+    (type) => {
+      if (!reactFlowWrapper.current || !type) return;
+
+      const centerPosition = screenToFlowPosition({
+        x: reactFlowWrapper.current.clientWidth / 2,
+        y: reactFlowWrapper.current.clientHeight / 2,
+      });
+
+      const newNode = {
+        id: getId(),
+        type,
+        position: centerPosition,
+        data: {
+          label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
+        },
+        parentId: "",
+      };
+
+      setNodes((nds) => nds.concat(newNode));
+    },
+    [screenToFlowPosition, setNodes, type]
+  );
+
   return (
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -156,7 +180,7 @@ const Flow = () => {
           <Controls />
         </ReactFlow>
       </div>
-      <Sidebar />
+      <Sidebar handleClick={handleClick} />
     </div>
   );
 };

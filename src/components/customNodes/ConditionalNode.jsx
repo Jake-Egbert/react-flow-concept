@@ -1,7 +1,7 @@
 import { memo } from "react";
 import BaseNode from "./BaseNode";
 
-const ConditionalNode = ({ id }) => {
+const ConditionalNode = ({ id, type }) => {
   return (
     <BaseNode id={id} type={type}>
       <h3>Conditional</h3>
