@@ -1,10 +1,12 @@
-import { useRef, useCallback, useEffect } from "react";
+import { useRef, useCallback, useEffect, useState } from "react";
 import {
   ReactFlow,
   addEdge,
   useEdgesState,
   Controls,
   useReactFlow,
+  Background,
+  BackgroundVariant,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -15,6 +17,7 @@ import ConditionalNode from "../components/customNodes/ConditionalNode";
 import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
 import ChallengeNode from "./customNodes/ChallengeNode";
+import DefaultNode from "./customNodes/DefaultNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
@@ -23,6 +26,7 @@ const nodeTypes = {
   conditional: ConditionalNode,
   setVariable: SetVariableNode,
   challenge: ChallengeNode,
+  default: DefaultNode,
   group: GroupNode,
 };
 
@@ -30,10 +34,99 @@ let id = 0;
 const getId = () => `dndnode_${id++}`;
 
 const Flow = () => {
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
   const reactFlowWrapper = useRef(null);
   const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition, getNodes } = useReactFlow();
   const { type, nodes, setNodes, onNodesChange } = useFlow();
+
+  const onNodeClick = useCallback((event, node) => {
+    setSelectedNodeId(node.id);
+  }, []);
+
+  const createNewNode = () => {
+    const position = screenToFlowPosition({
+      x: reactFlowWrapper.current.clientWidth / 2,
+      y: reactFlowWrapper.current.clientHeight / 2,
+    });
+
+    const newNode = {
+      id: getId(),
+      type: "default",
+      position: position,
+      data: { label: "New Node" },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+  };
+
+  const createChildNode = () => {
+    if (!selectedNodeId) return;
+
+    const parentNode = getNodes().find((node) => node.id === selectedNodeId);
+    const newNode = {
+      id: getId(),
+      type: "default",
+      position: {
+        x: parentNode.position.x,
+        y: parentNode.position.y + 150,
+      },
+      data: { label: "Child Node" },
+      parentId: parentNode.id,
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+
+    const newEdge = {
+      id: `e${parentNode.id}-${newNode.id}`,
+      source: parentNode.id,
+      target: newNode.id,
+      sourceHandle: "bottom",
+      targetHandle: "top",
+    };
+
+    setEdges((eds) => addEdge(newEdge, eds));
+  };
+
+  const handleKeyDown = (event) => {
+    switch (event.key) {
+      case "ArrowUp":
+      case "ArrowDown":
+      case "ArrowLeft":
+      case "ArrowRight":
+        navigateNodes(event.key);
+        break;
+      case "Enter":
+        createChildNode();
+        break;
+      case "Tab":
+        event.preventDefault();
+        createNewNode();
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [selectedNodeId]);
+
+  const navigateNodes = (direction) => {
+    const nodes = getNodes();
+    const currentIndex = nodes.findIndex((node) => node.id === selectedNodeId);
+
+    let newIndex = currentIndex;
+    if (direction === "ArrowUp" || direction === "ArrowLeft") {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : nodes.length - 1;
+    } else if (direction === "ArrowDown" || direction === "ArrowRight") {
+      newIndex = currentIndex < nodes.length - 1 ? currentIndex + 1 : 0;
+    }
+    setSelectedNodeId(nodes[newIndex].id);
+  };
 
   const checkGroups = useCallback(() => {
     const groupNodes = getNodes().filter((node) => node.type === "group");
@@ -168,15 +261,25 @@ const Flow = () => {
     <div className="dndflow">
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
-          nodes={nodes}
+          nodes={nodes.map((node) => ({
+            ...node,
+            style: {
+              border:
+                node.id === selectedNodeId
+                  ? "2px solid blue"
+                  : "1px solid black",
+            },
+          }))}
           edges={edges}
           onNodesChange={onNodesChange}
           onConnect={onConnect}
           onDrop={onDrop}
           onDragOver={onDragOver}
           nodeTypes={nodeTypes}
+          onNodeClick={onNodeClick}
           fitView
         >
+          <Background color="#ccc" variant={BackgroundVariant.Dots} />
           <Controls />
         </ReactFlow>
       </div>
