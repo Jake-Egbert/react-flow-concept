@@ -1,7 +1,7 @@
 import { useFlow } from "./FlowContext";
 
 export default function Sidebar({ handleClick }) {
-  const { setType, setContextHandles } = useFlow();
+  const { setType, setContextHandles, contextHandles } = useFlow();
 
   const handleChange = (e) => {
     const { name } = e.target;
@@ -27,7 +27,7 @@ export default function Sidebar({ handleClick }) {
   ];
 
   return (
-    <aside>
+    <div>
       <div className="description">
         You can drag these nodes to the pane on the right.
       </div>
@@ -39,7 +39,12 @@ export default function Sidebar({ handleClick }) {
         </div>
         <div>
           <label>Top: </label>
-          <input type="checkbox" name="top" onChange={handleChange} checked />
+          <input
+            type="checkbox"
+            name="top"
+            onChange={handleChange}
+            checked={contextHandles.top}
+          />
         </div>
         <div>
           <label>right: </label>
@@ -62,6 +67,6 @@ export default function Sidebar({ handleClick }) {
           {type.charAt(0).toUpperCase() + type.slice(1)} Node
         </div>
       ))}
-    </aside>
+    </div>
   );
 }

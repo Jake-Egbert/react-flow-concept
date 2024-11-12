@@ -25,12 +25,13 @@ const nodeTypes = {
   presentation: PresentationNode,
   conditional: ConditionalNode,
   setVariable: SetVariableNode,
+  startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
   challenge: ChallengeNode,
   default: DefaultNode,
   group: GroupNode,
 };
 
-let id = 0;
+let id = 2;
 const getId = () => `dndnode_${id++}`;
 
 const Flow = () => {
@@ -38,7 +39,7 @@ const Flow = () => {
   const reactFlowWrapper = useRef(null);
   const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition, getNodes } = useReactFlow();
-  const { type, nodes, setNodes, onNodesChange } = useFlow();
+  const { type, nodes, setNodes, onNodesChange, contextHandles } = useFlow();
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNodeId(node.id);
@@ -64,28 +65,48 @@ const Flow = () => {
     if (!selectedNodeId) return;
 
     const parentNode = getNodes().find((node) => node.id === selectedNodeId);
+
+    const handles = parentNode?.data?.handles || {};
+    const hasRightHandle = handles.right;
+    const hasBottomHandle = handles.bottom;
+
+    const childHandles = hasBottomHandle
+      ? { top: true, bottom: true }
+      : hasRightHandle
+      ? { left: true, right: true }
+      : {};
+
+    const childPosition = {
+      x: hasRightHandle ? parentNode.position.x + 200 : parentNode.position.x,
+      y: hasBottomHandle ? parentNode.position.y + 150 : parentNode.position.y,
+    };
+
     const newNode = {
       id: getId(),
       type: "default",
-      position: {
-        x: parentNode.position.x,
-        y: parentNode.position.y + 150,
-      },
-      data: { label: "Child Node" },
+      position: childPosition,
+      data: { label: "Child Node", handles: childHandles },
       parentId: parentNode.id,
     };
 
     setNodes((nds) => [...nds, newNode]);
 
-    const newEdge = {
-      id: `e${parentNode.id}-${newNode.id}`,
-      source: parentNode.id,
-      target: newNode.id,
-      sourceHandle: "bottom",
-      targetHandle: "top",
-    };
+    const sourceHandle = hasBottomHandle ? "bottom" : "right";
+    const targetHandle = hasBottomHandle ? "top" : "left";
 
-    setEdges((eds) => addEdge(newEdge, eds));
+    if (handles[sourceHandle] && childHandles[targetHandle]) {
+      const newEdge = {
+        id: `e${parentNode.id}-${newNode.id}`,
+        source: parentNode.id,
+        target: newNode.id,
+        sourceHandle: sourceHandle,
+        targetHandle: targetHandle,
+      };
+
+      setEdges((eds) => addEdge(newEdge, eds));
+    } else {
+      console.warn("Handle IDs do not match. Edge was not created.");
+    }
   };
 
   const handleKeyDown = (event) => {
@@ -224,13 +245,14 @@ const Flow = () => {
         position,
         data: {
           label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
+          handles: { ...contextHandles }, // add handles based on contextHandles
         },
         parentId: "",
       };
 
       setNodes((nds) => nds.concat(newNode));
     },
-    [type, screenToFlowPosition, setNodes]
+    [type, screenToFlowPosition, setNodes, contextHandles]
   );
 
   const handleClick = useCallback(
@@ -259,6 +281,7 @@ const Flow = () => {
 
   return (
     <div className="dndflow">
+      <Sidebar handleClick={handleClick} />
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes.map((node) => ({
@@ -283,7 +306,6 @@ const Flow = () => {
           <Controls />
         </ReactFlow>
       </div>
-      <Sidebar handleClick={handleClick} />
     </div>
   );
 };

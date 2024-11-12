@@ -4,7 +4,7 @@ import { useFlow } from "../../FlowContext";
 
 import NodeTypeSelector from "../NodeTypeSelector";
 
-const BaseNode = ({ id, children, type }) => {
+const BaseNode = ({ id, children, type, oneHandle }) => {
   const [localHandles, setLocalHandles] = useState([]);
   const { contextHandles } = useFlow();
   const updateNodeInternals = useUpdateNodeInternals();
@@ -60,14 +60,16 @@ const BaseNode = ({ id, children, type }) => {
         currentType={currentNodeType.current}
         availableTypes={["presentation", "other_type"]}
       />
-      {localHandles.map((handle, index) => (
-        <Handle
-          key={index}
-          type={handle.type}
-          position={handle.position}
-          id={handle.id}
-        />
-      ))}
+      {oneHandle
+        ? ""
+        : localHandles.map((handle, index) => (
+            <Handle
+              key={index}
+              type={handle.type}
+              position={handle.position}
+              id={handle.id}
+            />
+          ))}
       {children}
     </div>
   );

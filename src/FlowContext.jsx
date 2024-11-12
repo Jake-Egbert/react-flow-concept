@@ -2,6 +2,16 @@ import { createContext, useContext, useState } from "react";
 import { useNodesState } from "@xyflow/react";
 const FlowContext = createContext();
 
+const initialNodes = [
+  {
+    id: "1",
+    type: "startNode",
+    data: { label: "Start Node" },
+    position: { x: 250, y: 250 },
+    oneHandle: true,
+  },
+];
+
 export const FlowProvider = ({ children }) => {
   const [type, setType] = useState(null);
   const [contextHandles, setContextHandles] = useState({
@@ -10,7 +20,7 @@ export const FlowProvider = ({ children }) => {
     right: false,
     bottom: false,
   });
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
 
   const values = {
     type,

@@ -1,12 +1,13 @@
-import { memo, useState } from "react";
-import { NodeToolbar } from "@xyflow/react";
-import CustomModal from "../modals/Modal";
-import BaseNode from "./BaseNode";
+import { memo } from "react";
 
-const DefaultNode = ({ id, type }) => {
+import BaseNode from "./BaseNode";
+import { Handle } from "@xyflow/react";
+
+const DefaultNode = ({ id, type, oneHandle }) => {
   return (
     <>
-      <BaseNode id={id} type={type}>
+      {oneHandle && <Handle type="source" position="right" />}
+      <BaseNode id={id} type={type} oneHandle={oneHandle}>
         <h3>Default</h3>
       </BaseNode>
     </>
