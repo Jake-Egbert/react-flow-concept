@@ -15,12 +15,11 @@ const initialNodes = [
 export const FlowProvider = ({ children }) => {
   const [type, setType] = useState(null);
   const [contextHandles, setContextHandles] = useState({
-    left: false,
-    top: true,
-    right: false,
-    bottom: false,
+    left: true,
+    right: true,
   });
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  // const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const values = {
     type,

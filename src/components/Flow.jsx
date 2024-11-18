@@ -2,11 +2,12 @@ import { useRef, useCallback, useEffect, useState } from "react";
 import {
   ReactFlow,
   addEdge,
-  useEdgesState,
   Controls,
   useReactFlow,
   Background,
   BackgroundVariant,
+  useUpdateNodeInternals,
+  useEdgesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -32,122 +33,19 @@ const nodeTypes = {
 };
 
 let id = 2;
-const getId = () => `dndnode_${id++}`;
+const getId = () => `node_${id++}`;
 
 const Flow = () => {
   const [selectedNodeId, setSelectedNodeId] = useState(null);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
   const reactFlowWrapper = useRef(null);
-  const [edges, setEdges] = useEdgesState([]);
   const { screenToFlowPosition, getNodes } = useReactFlow();
   const { type, nodes, setNodes, onNodesChange, contextHandles } = useFlow();
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNodeId(node.id);
   }, []);
-
-  const createNewNode = () => {
-    const position = screenToFlowPosition({
-      x: reactFlowWrapper.current.clientWidth / 2,
-      y: reactFlowWrapper.current.clientHeight / 2,
-    });
-
-    const newNode = {
-      id: getId(),
-      type: "default",
-      position: position,
-      data: { label: "New Node" },
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-  };
-
-  const createChildNode = () => {
-    if (!selectedNodeId) return;
-
-    const parentNode = getNodes().find((node) => node.id === selectedNodeId);
-
-    const handles = parentNode?.data?.handles || {};
-    const hasRightHandle = handles.right;
-    const hasBottomHandle = handles.bottom;
-
-    const childHandles = hasBottomHandle
-      ? { top: true, bottom: true }
-      : hasRightHandle
-      ? { left: true, right: true }
-      : {};
-
-    const childPosition = {
-      x: hasRightHandle ? parentNode.position.x + 200 : parentNode.position.x,
-      y: hasBottomHandle ? parentNode.position.y + 150 : parentNode.position.y,
-    };
-
-    const newNode = {
-      id: getId(),
-      type: "default",
-      position: childPosition,
-      data: { label: "Child Node", handles: childHandles },
-      parentId: parentNode.id,
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-
-    const sourceHandle = hasBottomHandle ? "bottom" : "right";
-    const targetHandle = hasBottomHandle ? "top" : "left";
-
-    if (handles[sourceHandle] && childHandles[targetHandle]) {
-      const newEdge = {
-        id: `e${parentNode.id}-${newNode.id}`,
-        source: parentNode.id,
-        target: newNode.id,
-        sourceHandle: sourceHandle,
-        targetHandle: targetHandle,
-      };
-
-      setEdges((eds) => addEdge(newEdge, eds));
-    } else {
-      console.warn("Handle IDs do not match. Edge was not created.");
-    }
-  };
-
-  const handleKeyDown = (event) => {
-    switch (event.key) {
-      case "ArrowUp":
-      case "ArrowDown":
-      case "ArrowLeft":
-      case "ArrowRight":
-        navigateNodes(event.key);
-        break;
-      case "Enter":
-        createChildNode();
-        break;
-      case "Tab":
-        event.preventDefault();
-        createNewNode();
-        break;
-      default:
-        break;
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("keydown", handleKeyDown);
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [selectedNodeId]);
-
-  const navigateNodes = (direction) => {
-    const nodes = getNodes();
-    const currentIndex = nodes.findIndex((node) => node.id === selectedNodeId);
-
-    let newIndex = currentIndex;
-    if (direction === "ArrowUp" || direction === "ArrowLeft") {
-      newIndex = currentIndex > 0 ? currentIndex - 1 : nodes.length - 1;
-    } else if (direction === "ArrowDown" || direction === "ArrowRight") {
-      newIndex = currentIndex < nodes.length - 1 ? currentIndex + 1 : 0;
-    }
-    setSelectedNodeId(nodes[newIndex].id);
-  };
 
   const checkGroups = useCallback(() => {
     const groupNodes = getNodes().filter((node) => node.type === "group");
@@ -245,7 +143,6 @@ const Flow = () => {
         position,
         data: {
           label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
-          handles: { ...contextHandles }, // add handles based on contextHandles
         },
         parentId: "",
       };
@@ -279,6 +176,93 @@ const Flow = () => {
     [screenToFlowPosition, setNodes, type]
   );
 
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (!selectedNodeId) return;
+
+      const nodes = getNodes();
+      const selectedNodeIndex = nodes.findIndex(
+        (node) => node.id === selectedNodeId
+      );
+
+      let newSelectedNodeId = selectedNodeId;
+
+      switch (event.key) {
+        case "ArrowUp":
+          if (selectedNodeIndex > 0) {
+            newSelectedNodeId = nodes[selectedNodeIndex - 1].id;
+          }
+          break;
+        case "ArrowDown":
+          if (selectedNodeIndex < nodes.length - 1) {
+            newSelectedNodeId = nodes[selectedNodeIndex + 1].id;
+          }
+          break;
+        case "Enter":
+          createChildNode(selectedNodeId);
+          break;
+        case "Tab":
+          event.preventDefault();
+          createDefaultNode();
+          break;
+        default:
+          break;
+      }
+
+      setSelectedNodeId(newSelectedNodeId);
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedNodeId, getNodes, setSelectedNodeId]);
+
+  const createChildNode = useCallback(
+    (parentId) => {
+      const parent = nodes.find((node) => node.id === parentId);
+      if (!parent) return;
+
+      const newNodeId = getId();
+
+      const newChildNode = {
+        id: newNodeId,
+        type: "default",
+        position: {
+          x: parent.position.x + 150,
+          y: parent.position.y + 150,
+        },
+        data: {
+          label: "Child Node",
+        },
+      };
+
+      setNodes((nds) => nds.concat(newChildNode));
+
+      const newEdgeId = `xy-edge__${parentId}-right-${newNodeId}-left`;
+      if (!edges.find((edge) => edge.id === newEdgeId)) {
+        const newEdge = {
+          id: newEdgeId,
+          source: parentId,
+          target: newNodeId,
+          sourceHandle: `${parentId}-right`,
+          targetHandle: `${newNodeId}-left`,
+        };
+
+        setEdges((eds) => addEdge(newEdge, eds));
+      }
+    },
+    [nodes, edges, setNodes, setEdges]
+  );
+  const createDefaultNode = useCallback(() => {
+    const newNode = {
+      id: getId(),
+      type: "default",
+      position: { x: 250, y: 250 },
+      data: { label: "Default Node" },
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+  }, [setNodes]);
+
   return (
     <div className="dndflow">
       <Sidebar handleClick={handleClick} />
@@ -295,6 +279,7 @@ const Flow = () => {
           }))}
           edges={edges}
           onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onDrop={onDrop}
           onDragOver={onDragOver}

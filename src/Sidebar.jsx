@@ -13,7 +13,6 @@ export default function Sidebar({ handleClick }) {
 
   const onDragStart = (event, nodeType) => {
     setType(nodeType);
-    console.log(nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
 
@@ -35,24 +34,21 @@ export default function Sidebar({ handleClick }) {
         <div className="description">Handles on nodes</div>
         <div>
           <label>Left: </label>
-          <input type="checkbox" name="left" onChange={handleChange} />
-        </div>
-        <div>
-          <label>Top: </label>
           <input
             type="checkbox"
-            name="top"
+            name="left"
             onChange={handleChange}
-            checked={contextHandles.top}
+            checked={contextHandles.left}
           />
         </div>
         <div>
           <label>right: </label>
-          <input type="checkbox" name="right" onChange={handleChange} />
-        </div>
-        <div>
-          <label>bottom: </label>
-          <input type="checkbox" name="bottom" onChange={handleChange} />
+          <input
+            type="checkbox"
+            name="right"
+            onChange={handleChange}
+            checked={contextHandles.right}
+          />
         </div>
       </div>
 

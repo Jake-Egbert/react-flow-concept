@@ -2,49 +2,39 @@ import { useState, useRef, useEffect, memo } from "react";
 import { Handle, Position, useUpdateNodeInternals } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 
-import NodeTypeSelector from "../NodeTypeSelector";
+import NodeTypeSelector from "../flowHelpers/NodeTypeSelector";
 
 const BaseNode = ({ id, children, type, oneHandle }) => {
   const [localHandles, setLocalHandles] = useState([]);
-  const { contextHandles } = useFlow();
+  const [lastNodeStates, setLastNodeStates] = useState({});
+  const { contextHandles, nodes } = useFlow();
+  let count = 0;
   const updateNodeInternals = useUpdateNodeInternals();
 
   const initialContextHandles = useRef(contextHandles);
   const currentNodeType = useRef(type);
 
   useEffect(() => {
-    console.log(type);
     currentNodeType.current = type;
-    console.log(currentNodeType);
   }, [type]);
 
   useEffect(() => {
     const initialHandles = [];
 
-    if (initialContextHandles.current.top)
-      initialHandles.push({
-        position: Position.Top,
-        type: "target",
-        id: "top",
-      });
-    if (initialContextHandles.current.left)
+    if (initialContextHandles.current.left) {
       initialHandles.push({
         position: Position.Left,
         type: "target",
-        id: "left",
+        id: `${id}-left`,
       });
-    if (initialContextHandles.current.right)
+    }
+    if (initialContextHandles.current.right) {
       initialHandles.push({
         position: Position.Right,
         type: "source",
-        id: "right",
+        id: `${id}-right`,
       });
-    if (initialContextHandles.current.bottom)
-      initialHandles.push({
-        position: Position.Bottom,
-        type: "source",
-        id: "bottom",
-      });
+    }
 
     setLocalHandles(initialHandles);
   }, [initialContextHandles]);

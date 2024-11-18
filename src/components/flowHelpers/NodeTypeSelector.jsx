@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useFlow } from "../FlowContext";
+import { useFlow } from "../../FlowContext";
 
 const NodeTypeSelector = ({ nodeId, currentType }) => {
   const [isSelecting, setIsSelecting] = useState(false);

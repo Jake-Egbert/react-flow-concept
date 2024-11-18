@@ -7,7 +7,6 @@ const PresentationNode = ({ id, data, type }) => {
   const [isEditing, setIsEditing] = useState(false);
 
   const handleOpenModal = () => {
-    console.log(data);
     if (!isEditing) {
       setIsEditing(true);
     }
