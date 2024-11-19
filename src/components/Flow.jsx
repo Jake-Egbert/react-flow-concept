@@ -192,7 +192,6 @@ const Flow = () => {
         },
       };
 
-      // Ensure child node always has both handles
       const newChildHandles = [
         {
           position: Position.Left,
@@ -213,7 +212,6 @@ const Flow = () => {
         })
       );
 
-      // Create an edge only if the parent has a right handle
       const newEdgeId = `xy-edge__${parentId}-right-${newNodeId}-left`;
       if (!edges.find((edge) => edge.id === newEdgeId)) {
         const newEdge = {
