@@ -4,7 +4,7 @@ const FlowContext = createContext();
 
 const initialNodes = [
   {
-    id: "1",
+    id: "node_1",
     type: "startNode",
     data: { label: "Start Node" },
     position: { x: 250, y: 250 },
@@ -14,12 +14,11 @@ const initialNodes = [
 
 export const FlowProvider = ({ children }) => {
   const [type, setType] = useState(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [contextHandles, setContextHandles] = useState({
     left: true,
     right: true,
   });
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  // const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const values = {
     type,

@@ -23,12 +23,14 @@ const ChallengeNode = ({ id, data, type }) => {
         <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
           <button onClick={handleOpenModal}>Edit</button>
         </NodeToolbar>
+
         <select>
           <option value="boolean">Sheriff Showdown</option>
           <option value="text">Mind Bender</option>
           <option value="number">Order Pictures</option>
         </select>
       </BaseNode>
+
       {isEditing && (
         <CustomModal
           isOpen={isEditing}

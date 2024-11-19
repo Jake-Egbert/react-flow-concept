@@ -8,6 +8,7 @@ const SetVariableNode = ({ id, type }) => {
       <h3>Set Variable</h3>
       <label htmlFor="text">Text:</label>
       <input id="text" name="text" className="nodrag" />
+
       <select>
         <option value="boolean">True/False</option>
         <option value="text">Text</option>

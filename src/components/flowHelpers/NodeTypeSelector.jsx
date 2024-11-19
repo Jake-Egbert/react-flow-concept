@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { useFlow } from "../../FlowContext";
 
-const NodeTypeSelector = ({ nodeId, currentType }) => {
+const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
   const [isSelecting, setIsSelecting] = useState(false);
-
   const { setNodes } = useFlow();
+
+  const filteredTypes =
+    currentType === "default" ||
+    currentType === "startNode" ||
+    currentType === "childNode"
+      ? ["default", ...availableTypes]
+      : availableTypes.filter(
+          (type) => type !== "default" && type !== "startNode"
+        );
 
   const handleTypeChange = (newType) => {
     setNodes((nds) =>
@@ -25,12 +33,11 @@ const NodeTypeSelector = ({ nodeId, currentType }) => {
           value={currentType}
           onChange={(e) => handleTypeChange(e.target.value)}
         >
-          <option value="presentation">Presentation</option>
-          <option value="adjustQuantity">Adjust Quantity</option>
-          <option value="conditional">Conditional</option>
-          <option value="setVariable">Set Variable</option>
-          <option value="challenge">Challenge</option>
-          <option value="group">Group</option>
+          {filteredTypes.map((type) => (
+            <option key={type} value={type}>
+              {type.charAt(0).toUpperCase() + type.slice(1)}
+            </option>
+          ))}
         </select>
       )}
     </div>

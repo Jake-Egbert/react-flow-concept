@@ -6,7 +6,7 @@ import {
   useReactFlow,
   Background,
   BackgroundVariant,
-  useUpdateNodeInternals,
+  Position,
   useEdgesState,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -27,6 +27,7 @@ const nodeTypes = {
   conditional: ConditionalNode,
   setVariable: SetVariableNode,
   startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
+  childNode: (props) => <DefaultNode {...props} noHandle={true} />,
   challenge: ChallengeNode,
   default: DefaultNode,
   group: GroupNode,
@@ -110,10 +111,6 @@ const Flow = () => {
     );
   }, []);
 
-  useEffect(() => {
-    checkGroups();
-  }, [nodes, checkGroups]);
-
   const onConnect = useCallback(
     (params) => setEdges((eds) => addEdge(params, eds)),
     []
@@ -176,6 +173,74 @@ const Flow = () => {
     [screenToFlowPosition, setNodes, type]
   );
 
+  const createChildNode = useCallback(
+    (parentId) => {
+      const parent = nodes.find((node) => node.id === parentId);
+      if (!parent) return;
+
+      const newNodeId = getId();
+
+      const newChildNode = {
+        id: newNodeId,
+        type: "childNode",
+        position: {
+          x: parent.position.x + 150,
+          y: parent.position.y + 150,
+        },
+        data: {
+          label: "Child Node",
+        },
+      };
+
+      // Ensure child node always has both handles
+      const newChildHandles = [
+        {
+          position: Position.Left,
+          type: "target",
+          id: `${newNodeId}-left`,
+        },
+        {
+          position: Position.Right,
+          type: "source",
+          id: `${newNodeId}-right`,
+        },
+      ];
+
+      setNodes((nds) =>
+        nds.concat({
+          ...newChildNode,
+          handles: newChildHandles,
+        })
+      );
+
+      // Create an edge only if the parent has a right handle
+      const newEdgeId = `xy-edge__${parentId}-right-${newNodeId}-left`;
+      if (!edges.find((edge) => edge.id === newEdgeId)) {
+        const newEdge = {
+          id: newEdgeId,
+          source: parentId,
+          target: newNodeId,
+          sourceHandle: `${parentId}-right`,
+          targetHandle: `${newNodeId}-left`,
+        };
+
+        setEdges((eds) => addEdge(newEdge, eds));
+      }
+    },
+    [nodes, edges, setNodes, setEdges]
+  );
+
+  const createDefaultNode = useCallback(() => {
+    const newNode = {
+      id: getId(),
+      type: "default",
+      position: { x: 250, y: 250 },
+      data: { label: "Default Node" },
+    };
+
+    setNodes((nds) => nds.concat(newNode));
+  }, [setNodes]);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (!selectedNodeId) return;
@@ -216,52 +281,9 @@ const Flow = () => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedNodeId, getNodes, setSelectedNodeId]);
 
-  const createChildNode = useCallback(
-    (parentId) => {
-      const parent = nodes.find((node) => node.id === parentId);
-      if (!parent) return;
-
-      const newNodeId = getId();
-
-      const newChildNode = {
-        id: newNodeId,
-        type: "default",
-        position: {
-          x: parent.position.x + 150,
-          y: parent.position.y + 150,
-        },
-        data: {
-          label: "Child Node",
-        },
-      };
-
-      setNodes((nds) => nds.concat(newChildNode));
-
-      const newEdgeId = `xy-edge__${parentId}-right-${newNodeId}-left`;
-      if (!edges.find((edge) => edge.id === newEdgeId)) {
-        const newEdge = {
-          id: newEdgeId,
-          source: parentId,
-          target: newNodeId,
-          sourceHandle: `${parentId}-right`,
-          targetHandle: `${newNodeId}-left`,
-        };
-
-        setEdges((eds) => addEdge(newEdge, eds));
-      }
-    },
-    [nodes, edges, setNodes, setEdges]
-  );
-  const createDefaultNode = useCallback(() => {
-    const newNode = {
-      id: getId(),
-      type: "default",
-      position: { x: 250, y: 250 },
-      data: { label: "Default Node" },
-    };
-
-    setNodes((nds) => nds.concat(newNode));
-  }, [setNodes]);
+  useEffect(() => {
+    checkGroups();
+  }, [nodes, checkGroups]);
 
   return (
     <div className="dndflow">
