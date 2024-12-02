@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import jsQR from "jsqr";
 
 const QRScanner = () => {
   const cameraRef = useRef(null);
@@ -29,38 +30,45 @@ const QRScanner = () => {
     };
   }, [cameraIsOpen]);
 
-  const handleScanClick = useCallback(async () => {
-    if (!("BarcodeDetector" in window)) {
-      alert("BarcodeDetector API is not supported in this browser.");
-      return;
-    }
-
-    const barcodeDetector = new BarcodeDetector({ formats: ["qr_code"] });
+  const scanQRCode = useCallback(() => {
     const video = cameraRef.current;
-    const screenshot = screenshotRef.current;
-    const context = screenshot.getContext("2d");
+    const canvas = screenshotRef.current;
+    const context = canvas.getContext("2d");
 
     if (video.readyState === video.HAVE_ENOUGH_DATA) {
-      context.drawImage(video, 0, 0, screenshot.width, screenshot.height);
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
 
-      try {
-        const barcodes = await barcodeDetector.detect(screenshot);
-        if (barcodes.length > 0) {
-          setQrData(barcodes[0].rawValue);
-        } else {
-          setQrData("No QR code detected");
-        }
-      } catch (err) {
-        console.error("Barcode detection failed:", err);
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+
+      if (code) {
+        setQrData(code.data);
+      } else {
+        setQrData("No QR code detected");
       }
-    } else {
-      setQrData("Camera still loading");
     }
   }, []);
 
+  useEffect(() => {
+    let interval;
+    if (cameraIsOpen) {
+      interval = setInterval(scanQRCode, 1000);
+    }
+    return () => {
+      clearInterval(interval);
+    };
+  }, [cameraIsOpen, scanQRCode]);
+
   return (
     <>
-      <button onClick={() => setCameraIsOpen((prev) => !prev)}>
+      <button
+        className="qr-scanner"
+        onClick={() => setCameraIsOpen((prev) => !prev)}
+      >
         {cameraIsOpen ? "Close Camera" : "Open Camera"}
       </button>
       {cameraIsOpen && (
@@ -72,10 +80,8 @@ const QRScanner = () => {
             autoPlay
             playsInline
           />
-          <button onClick={handleScanClick}>Scan QR Code</button>
-          {qrData && <p>{qrData}</p>}
-
-          <canvas ref={screenshotRef}></canvas>
+          <p>{qrData}</p>
+          <canvas ref={screenshotRef} style={{ display: "none" }}></canvas>
         </div>
       )}
     </>

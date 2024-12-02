@@ -41,6 +41,10 @@
   color: #888;
 }
 
+.qr-scanner {
+  height: 100px;
+}
+
 canvas {
   display: none;
   width: 640px;

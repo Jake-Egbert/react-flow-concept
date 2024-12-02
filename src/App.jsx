@@ -155,7 +155,6 @@ const DnDFlow = () => {
         </ReactFlow>
       </div>
       <Sidebar />
-      {/* <button onClick={setCameraIsOpen((prev) => !prev)}>Camera</button> */}
       {<QRScanner />}
     </div>
   );
