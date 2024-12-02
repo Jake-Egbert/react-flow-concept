@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import { useHistory } from "react-router-dom";
 import jsQR from "jsqr";
 
 const QRScanner = () => {
@@ -6,6 +7,8 @@ const QRScanner = () => {
   const screenshotRef = useRef(null);
   const [qrData, setQrData] = useState("");
   const [cameraIsOpen, setCameraIsOpen] = useState(false);
+
+  const history = useHistory();
 
   useEffect(() => {
     let stream;
@@ -47,6 +50,7 @@ const QRScanner = () => {
 
       if (code) {
         setQrData(code.data);
+        history.push(code.data);
       } else {
         setQrData("No QR code detected");
       }
@@ -76,7 +80,7 @@ const QRScanner = () => {
           <h1>QR Code Scanner</h1>
           <video
             ref={cameraRef}
-            style={{ width: "100%" }}
+            style={{ width: "500px" }}
             autoPlay
             playsInline
           />

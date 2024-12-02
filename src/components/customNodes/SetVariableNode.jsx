@@ -1,21 +1,22 @@
 import { memo } from "react";
-import { Handle, Position } from "@xyflow/react";
 
-function SetVariableNode() {
+import BaseNode from "./BaseNode";
+
+const SetVariableNode = ({ id, type }) => {
   return (
-    <div className="text-updater-node">
-      <Handle type="target" position={Position.Left} />
+    <BaseNode id={id} type={type}>
+      <h3>Set Variable</h3>
       <label htmlFor="text">Text:</label>
       <input id="text" name="text" className="nodrag" />
+
       <select>
         <option value="boolean">True/False</option>
         <option value="text">Text</option>
         <option value="number">Number</option>
       </select>
       <input type="text" />
-      <Handle type="source" position={Position.Right} id="b" />
-    </div>
+    </BaseNode>
   );
-}
+};
 
 export default memo(SetVariableNode);

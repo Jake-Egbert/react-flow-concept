@@ -1,13 +1,12 @@
-import React from "react";
-import { NodeResizer, Handle } from "@xyflow/react";
+import { NodeResizer } from "@xyflow/react";
+import BaseNode from "./BaseNode";
 
-const GroupNode = ({ data }) => {
+const GroupNode = ({ id, type }) => {
   return (
     <div className="group-node">
       <NodeResizer />
+      <BaseNode id={id} type={type} />
       <input type="text" />
-      <Handle type="target" position="top" />
-      <Handle type="source" position="bottom" />
     </div>
   );
 };
