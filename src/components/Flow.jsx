@@ -8,6 +8,7 @@ import {
   BackgroundVariant,
   Position,
   useEdgesState,
+  MiniMap,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
@@ -31,6 +32,17 @@ const nodeTypes = {
   challenge: ChallengeNode,
   default: DefaultNode,
   group: GroupNode,
+};
+
+const nodeTypeStyles = {
+  adjustQuantity: { border: "2px dashed green", color: "#008000" },
+  presentation: { border: "2px solid purple", color: "#800080" },
+  conditional: { border: "2px dotted orange", color: "#FFA500" },
+  setVariable: { border: "3px solid teal", color: "#008080" },
+  startNode: { border: "2px solid gold", color: "#FFD700" },
+  childNode: { border: "1px solid gray", color: "#808080" },
+  challenge: { border: "3px double red", color: "#FF0000" },
+  default: { border: "1px solid black", color: "#000000" },
 };
 
 let id = 2;
@@ -288,15 +300,21 @@ const Flow = () => {
       <Sidebar handleClick={handleClick} />
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
-          nodes={nodes.map((node) => ({
-            ...node,
-            style: {
-              border:
-                node.id === selectedNodeId
-                  ? "2px solid blue"
-                  : "1px solid black",
-            },
-          }))}
+          nodes={nodes.map((node) => {
+            let nodeStyle = nodeTypeStyles[node.type] || nodeTypeStyles.default;
+
+            if (node.id === selectedNodeId) {
+              nodeStyle = { ...nodeStyle, border: "2px solid blue" };
+            }
+
+            return {
+              ...node,
+              style: {
+                ...node.style,
+                border: nodeStyle.border,
+              },
+            };
+          })}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
@@ -307,6 +325,16 @@ const Flow = () => {
           onNodeClick={onNodeClick}
           fitView
         >
+          <MiniMap
+            position="bottom-left"
+            nodeStrokeColor={(node) => {
+              const nodeStyle =
+                nodeTypeStyles[node.type] || nodeTypeStyles.default;
+              return nodeStyle.color;
+            }}
+            zoomable
+            pannable
+          />
           <Background color="#ccc" variant={BackgroundVariant.Dots} />
           <Controls />
         </ReactFlow>
