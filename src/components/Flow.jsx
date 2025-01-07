@@ -23,25 +23,28 @@ import DefaultNode from "./customNodes/DefaultNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
-  adjustQuantity: AdjustQuantityNode,
+  reward: DefaultNode,
   presentation: PresentationNode,
-  conditional: ConditionalNode,
-  setVariable: SetVariableNode,
-  startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
-  childNode: (props) => <DefaultNode {...props} noHandle={true} />,
   challenge: ChallengeNode,
+  conditional: ConditionalNode,
+  variable: SetVariableNode,
+  adjustVariable: AdjustQuantityNode,
+  removeItem: DefaultNode,
+  addItem: DefaultNode,
   default: DefaultNode,
   group: GroupNode,
+  startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
+  childNode: (props) => <DefaultNode {...props} noHandle={true} />,
 };
 
 const nodeTypeStyles = {
-  adjustQuantity: { border: "2px dashed green", color: "#008000" },
+  adjustQuantity: { border: "2px solid green", color: "#008000" },
   presentation: { border: "2px solid purple", color: "#800080" },
-  conditional: { border: "2px dotted orange", color: "#FFA500" },
+  conditional: { border: "2px solid orange", color: "#FFA500" },
   setVariable: { border: "3px solid teal", color: "#008080" },
   startNode: { border: "2px solid gold", color: "#FFD700" },
   childNode: { border: "1px solid gray", color: "#808080" },
-  challenge: { border: "3px double red", color: "#FF0000" },
+  challenge: { border: "3px solid red", color: "#FF0000" },
   default: { border: "1px solid black", color: "#000000" },
 };
 

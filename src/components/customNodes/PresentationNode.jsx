@@ -19,7 +19,6 @@ const PresentationNode = ({ id, data, type }) => {
   return (
     <>
       <BaseNode id={id} type={type}>
-        <h3>presentation</h3>
         <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
           <button onClick={handleOpenModal}>Edit</button>
         </NodeToolbar>

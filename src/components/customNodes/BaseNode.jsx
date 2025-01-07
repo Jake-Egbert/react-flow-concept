@@ -7,8 +7,66 @@ import {
 } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 import HandleModal from "../modals/HandleModal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import NodeTypeSelector from "../flowHelpers/NodeTypeSelector";
+
+const nodeTypes = [
+  {
+    type: "reward",
+    label: "Reward",
+    icon: "fa-award",
+  },
+  {
+    type: "presentation",
+    label: "Presentation",
+    icon: "fa-person-chalkboard",
+  },
+  {
+    type: "challenge",
+    label: "Challenge",
+    icon: "fa-person-hiking",
+  },
+  {
+    type: "conditional",
+    label: "Conditional",
+    icon: "fa-road-circle-check",
+  },
+  {
+    type: "variable",
+    label: "Variable",
+    icon: "fa-shoe-prints",
+  },
+  {
+    type: "adjustVariable",
+    label: "Adjust Variable",
+    icon: "fa-plus-minus",
+  },
+  {
+    type: "removeItem",
+    label: "Remove Item",
+    icon: "fa-heart-circle-minus",
+  },
+  {
+    type: "addItem",
+    label: "Add Item",
+    icon: "fa-heart-circle-plus",
+  },
+  {
+    type: "group",
+    label: "Group Items",
+    icon: "fa-object-group",
+  },
+  {
+    type: "storyline",
+    label: "Link to Storyline",
+    icon: "fa-mountain-city",
+  },
+];
+
+const getNodeTypeConfig = (type) => {
+  return nodeTypes.find((nodeType) => nodeType.type === type) || {};
+};
 
 const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
   const [localHandles, setLocalHandles] = useState([]);
@@ -18,6 +76,8 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
   const updateNodeInternals = useUpdateNodeInternals();
 
   let currentNodeType = useRef(type);
+
+  const { label, icon } = getNodeTypeConfig(type);
 
   const handleOpenModal = () => {
     if (!isEditing) {
@@ -137,7 +197,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
 
   return (
     <>
-      <div className="text-updater-node">
+      <div className="custom-node-wrapper">
         <NodeToolbar position="bottom">
           <button onClick={handleOpenModal}>Handles</button>
         </NodeToolbar>
@@ -174,6 +234,12 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
             />
           );
         })}
+
+        <div className="node-header">
+          <FontAwesomeIcon icon={`fa-solid ${icon}`} className="node-icon" />
+          <span>{label}</span>
+        </div>
+
         {children}
       </div>
       {isEditing && (

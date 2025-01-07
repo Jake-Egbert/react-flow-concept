@@ -5,7 +5,6 @@ function AdjustQuantityNode({ id, type }) {
   return (
     <BaseNode id={id} type={type}>
       <div className="text-updater-node">
-        <h3>Adjust Quantity</h3>
         <select>
           <option value="boots">Boots</option>
           <option value="coin">Coin</option>

@@ -5,7 +5,6 @@ import BaseNode from "./BaseNode";
 const SetVariableNode = ({ id, type }) => {
   return (
     <BaseNode id={id} type={type}>
-      <h3>Set Variable</h3>
       <label htmlFor="text">Text:</label>
       <input id="text" name="text" className="nodrag" />
 
