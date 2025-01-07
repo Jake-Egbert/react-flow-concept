@@ -15,8 +15,8 @@ const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
         );
 
   const handleTypeChange = (newType) => {
-    setNodes((nds) =>
-      nds?.map((node) =>
+    setNodes((nodes) =>
+      nodes.map((node) =>
         node.id === nodeId
           ? { ...node, type: newType, data: { ...node.data, type: newType } }
           : node
@@ -26,12 +26,20 @@ const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
   };
 
   return (
-    <div>
-      <button onClick={() => setIsSelecting(!isSelecting)}>+</button>
+    <div className="node-type-selector">
+      <div
+        className="node-type-display"
+        onClick={() => setIsSelecting(!isSelecting)}
+      >
+        {currentType.charAt(0).toUpperCase() + currentType.slice(1)}
+      </div>
       {isSelecting && (
         <select
           value={currentType}
           onChange={(e) => handleTypeChange(e.target.value)}
+          onBlur={() => setIsSelecting(false)}
+          autoFocus
+          className="node-type-dropdown"
         >
           {filteredTypes.map((type) => (
             <option key={type} value={type}>

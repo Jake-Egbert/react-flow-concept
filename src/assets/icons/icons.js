@@ -9,6 +9,8 @@ import {
   faHeartCirclePlus,
   faObjectGroup,
   faMountainCity,
+  faChevronUp,
+  faChevronDown,
 } from "@fortawesome/free-solid-svg-icons";
 import { library } from "@fortawesome/fontawesome-svg-core";
 
@@ -23,7 +25,9 @@ const icons = () => {
     faHeartCircleMinus,
     faHeartCirclePlus,
     faObjectGroup,
-    faMountainCity
+    faMountainCity,
+    faChevronUp,
+    faChevronDown
   );
 };
 

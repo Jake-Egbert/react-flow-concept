@@ -5,12 +5,14 @@
   height: 100%;
 }
 
-// .dndflow aside {
-//   border-right: 1px solid #eee;
-//   padding: 15px 10px;
-//   font-size: 12px;
-//   background: #fcfcfc;
-// }
+.react-flow__node {
+  border-radius: 30px;
+  padding: 0 0 20px 0;
+  width: 300px;
+  border: 1px solid #fec797;
+  background-color: white;
+  min-height: 100px;
+}
 
 .dndflow .reactflow-wrapper {
   flex-grow: 1;

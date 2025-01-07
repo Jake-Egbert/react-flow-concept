@@ -202,18 +202,6 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
           <button onClick={handleOpenModal}>Handles</button>
         </NodeToolbar>
 
-        <NodeTypeSelector
-          nodeId={id}
-          currentType={currentNodeType.current}
-          availableTypes={[
-            "presentation",
-            "adjustQuantity",
-            "conditional",
-            "setVariable",
-            "challenge",
-            "group",
-          ]}
-        />
         {localHandles.map((handle, index, arr) => {
           const handleCount = arr.filter(
             (h) => h.position === handle.position
@@ -235,9 +223,22 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
           );
         })}
 
-        <div className="node-header">
-          <FontAwesomeIcon icon={`fa-solid ${icon}`} className="node-icon" />
-          <span>{label}</span>
+        <div className={`node-header ${type}`}>
+          {icon && (
+            <FontAwesomeIcon icon={`fa-solid ${icon}`} className="node-icon" />
+          )}
+          <NodeTypeSelector
+            nodeId={id}
+            currentType={currentNodeType.current}
+            availableTypes={[
+              "presentation",
+              "adjustQuantity",
+              "conditional",
+              "setVariable",
+              "challenge",
+              "group",
+            ]}
+          />
         </div>
 
         {children}
