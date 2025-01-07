@@ -1,8 +1,6 @@
 import Modal from "react-modal";
 import { useState } from "react";
 
-import "../../styles/modals/modal.css";
-
 export default function HandleModal({
   isOpen,
   onRequestClose,

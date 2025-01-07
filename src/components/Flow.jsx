@@ -336,7 +336,7 @@ const Flow = () => {
             pannable
           />
           <Background color="#ccc" variant={BackgroundVariant.Dots} />
-          <Controls />
+          <Controls position="bottom-right" />
         </ReactFlow>
       </div>
     </div>

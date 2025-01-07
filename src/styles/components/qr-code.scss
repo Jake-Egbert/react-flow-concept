@@ -1,0 +1,15 @@
+.qr-scan-container {
+  .read-the-docs {
+    color: #888;
+  }
+
+  .qr-scanner {
+    height: 100px;
+  }
+
+  canvas {
+    display: none;
+    width: 640px;
+    height: 480px;
+  }
+}
