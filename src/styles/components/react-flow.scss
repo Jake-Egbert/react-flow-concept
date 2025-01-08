@@ -1,3 +1,5 @@
+@use "../common/variables.scss" as *;
+
 .dndflow {
   flex-direction: column;
   display: flex;
@@ -9,7 +11,7 @@
   border-radius: 30px;
   padding: 0 0 20px 0;
   width: 300px;
-  border: 1px solid #fec797;
+  border: 1px solid $peach;
   background-color: white;
   min-height: 100px;
 }
@@ -30,8 +32,8 @@
 
 .react-flow__controls-button {
   background-color: white;
-  color: orange;
-  border: orange 1px solid;
+  color: $peach;
+  border: $peach 1px solid;
   border-radius: 30px;
   margin: 2px;
   width: 85px;
@@ -46,11 +48,15 @@
 }
 
 .react-flow__controls-button:last-child {
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid $peach;
 }
 
-.react-flow__controls-button:hover {
-  /* background-color: #666; */
+.react-flow__handle {
+  background-color: $peach;
+  width: 5px;
+  height: 10px;
+  border-radius: 0;
+  border: none;
 }
 
 @media screen and (min-width: 768px) {

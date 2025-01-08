@@ -232,9 +232,9 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
             currentType={currentNodeType.current}
             availableTypes={[
               "presentation",
-              "adjustQuantity",
+              "adjustVariable",
               "conditional",
-              "setVariable",
+              "variable",
               "challenge",
               "group",
             ]}

@@ -3,9 +3,10 @@
 .custom-node-wrapper {
   .node-header {
     display: flex;
-    padding: 5px 0 5px 15px;
+    padding: 10px 15px;
     gap: 10px;
     color: white;
+    margin-bottom: 10px;
   }
 
   @each $type, $color in $node-colors {

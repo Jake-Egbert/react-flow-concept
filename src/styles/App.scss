@@ -1,3 +1,5 @@
+@use "./common/variables.scss" as *;
+
 #root {
   margin: 0 auto;
   text-align: center;
@@ -13,4 +15,12 @@ body {
 #app {
   width: 100vw;
   height: 100vh;
+}
+
+input {
+  border: 1px solid $peach;
+  border-radius: 10px;
+  &:focus {
+    outline: none;
+  }
 }

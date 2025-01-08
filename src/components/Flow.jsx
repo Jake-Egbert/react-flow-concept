@@ -5,7 +5,6 @@ import {
   Controls,
   useReactFlow,
   Background,
-  BackgroundVariant,
   Position,
   useEdgesState,
   MiniMap,
@@ -38,7 +37,7 @@ const nodeTypes = {
 };
 
 const nodeTypeStyles = {
-  adjustQuantity: { border: "2px solid green", color: "#008000" },
+  adjustVariable: { border: "2px solid green", color: "#008000" },
   presentation: { border: "2px solid purple", color: "#800080" },
   conditional: { border: "2px solid orange", color: "#FFA500" },
   setVariable: { border: "3px solid teal", color: "#008080" },
@@ -127,7 +126,13 @@ const Flow = () => {
   }, []);
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params) =>
+      setEdges((eds) =>
+        addEdge(
+          { ...params, style: { stroke: "#fec797", strokeWidth: 1 } },
+          eds
+        )
+      ),
     []
   );
 
@@ -235,6 +240,7 @@ const Flow = () => {
           target: newNodeId,
           sourceHandle: `${parentId}-right`,
           targetHandle: `${newNodeId}-left`,
+          className: "custom-edge",
         };
 
         setEdges((eds) => addEdge(newEdge, eds));
@@ -303,21 +309,12 @@ const Flow = () => {
       <Sidebar handleClick={handleClick} />
       <div className="reactflow-wrapper" ref={reactFlowWrapper}>
         <ReactFlow
-          nodes={nodes.map((node) => {
-            let nodeStyle = nodeTypeStyles[node.type] || nodeTypeStyles.default;
-
-            if (node.id === selectedNodeId) {
-              nodeStyle = { ...nodeStyle, border: "2px solid blue" };
-            }
-
-            return {
-              ...node,
-              style: {
-                ...node.style,
-                border: nodeStyle.border,
-              },
-            };
-          })}
+          nodes={nodes.map((node) => ({
+            ...node,
+            style: {
+              border: node.id === selectedNodeId ? "1px solid blue" : "",
+            },
+          }))}
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
@@ -338,7 +335,7 @@ const Flow = () => {
             zoomable
             pannable
           />
-          <Background color="#ccc" variant={BackgroundVariant.Dots} />
+          <Background color="#ccc" />
           <Controls position="bottom-right" />
         </ReactFlow>
       </div>

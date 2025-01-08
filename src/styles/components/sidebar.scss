@@ -5,9 +5,10 @@
   grid-template-columns: 1fr 1fr;
   padding: 30px;
   gap: 15px;
+  border-right: 1px solid $peach;
 
   .node-wrapper {
-    border: 1px solid #fec797;
+    border: 1px solid $peach;
     height: 60px;
     padding: 4px;
     border-radius: 22px;
