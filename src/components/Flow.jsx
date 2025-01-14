@@ -36,17 +36,6 @@ const nodeTypes = {
   childNode: (props) => <DefaultNode {...props} noHandle={true} />,
 };
 
-const nodeTypeStyles = {
-  adjustVariable: { border: "2px solid green", color: "#008000" },
-  presentation: { border: "2px solid purple", color: "#800080" },
-  conditional: { border: "2px solid orange", color: "#FFA500" },
-  setVariable: { border: "3px solid teal", color: "#008080" },
-  startNode: { border: "2px solid gold", color: "#FFD700" },
-  childNode: { border: "1px solid gray", color: "#808080" },
-  challenge: { border: "3px solid red", color: "#FF0000" },
-  default: { border: "1px solid black", color: "#000000" },
-};
-
 let id = 2;
 const getId = () => `node_${id++}`;
 
@@ -241,6 +230,7 @@ const Flow = () => {
           sourceHandle: `${parentId}-right`,
           targetHandle: `${newNodeId}-left`,
           className: "custom-edge",
+          style: { stroke: "#fec797", strokeWidth: 1 },
         };
 
         setEdges((eds) => addEdge(newEdge, eds));
@@ -327,11 +317,7 @@ const Flow = () => {
         >
           <MiniMap
             position="bottom-left"
-            nodeStrokeColor={(node) => {
-              const nodeStyle =
-                nodeTypeStyles[node.type] || nodeTypeStyles.default;
-              return nodeStyle.color;
-            }}
+            nodeClassName={(node) => `minimap-node-${node.type}`}
             zoomable
             pannable
           />

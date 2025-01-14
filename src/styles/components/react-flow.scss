@@ -59,6 +59,15 @@
   border: none;
 }
 
+.react-flow__panel {
+  @each $type, $color in $node-colors {
+    .minimap-node-#{$type} {
+      stroke: $color;
+      stroke-width: 10px;
+    }
+  }
+}
+
 @media screen and (min-width: 768px) {
   .dndflow {
     flex-direction: row;

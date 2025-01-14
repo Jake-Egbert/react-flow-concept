@@ -62,6 +62,21 @@ const nodeTypes = [
     label: "Link to Storyline",
     icon: "fa-mountain-city",
   },
+  {
+    type: "default",
+    label: "Default",
+    icon: "fa-arrow-right",
+  },
+  {
+    type: "startNode",
+    label: "Default",
+    icon: "fa-arrow-right",
+  },
+  {
+    type: "childNode",
+    label: "Default",
+    icon: "fa-arrow-right",
+  },
 ];
 
 const getNodeTypeConfig = (type) => {
