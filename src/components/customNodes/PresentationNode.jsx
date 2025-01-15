@@ -19,15 +19,17 @@ const PresentationNode = ({ id, data, type }) => {
   return (
     <>
       <BaseNode id={id} type={type}>
-        <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
-          <button onClick={handleOpenModal}>Edit</button>
-        </NodeToolbar>
+        <div className="node-wrapper">
+          <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
+            <button onClick={handleOpenModal}>Edit</button>
+          </NodeToolbar>
 
-        <select>
-          <option value="boolean">Home</option>
-          <option value="text">Menu 1</option>
-          <option value="number">Introduction</option>
-        </select>
+          <select>
+            <option value="boolean">Home</option>
+            <option value="text">Menu 1</option>
+            <option value="number">Introduction</option>
+          </select>
+        </div>
       </BaseNode>
       {isEditing && (
         <CustomModal

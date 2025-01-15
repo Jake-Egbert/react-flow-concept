@@ -27,3 +27,13 @@ select {
     outline: none;
   }
 }
+
+button {
+  border: 1px solid orange;
+  background-color: white;
+  color: orange;
+  border-radius: 30px;
+  width: 4rem;
+  height: 1.7rem;
+  font-size: large;
+}

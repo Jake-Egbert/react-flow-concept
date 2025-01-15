@@ -8,7 +8,7 @@ const DefaultNode = ({ id, type, oneHandle, noHandle }) => {
     <>
       {oneHandle && <Handle type="source" position="right" />}
       <BaseNode id={id} type={type} oneHandle={oneHandle} noHandle={noHandle}>
-        <h3>Default</h3>
+        <p>click on default on the header to change the node</p>
       </BaseNode>
     </>
   );

@@ -2,11 +2,13 @@
 @use "./common/common.scss";
 
 @use "./components/react-flow.scss";
-@use "./components/sidebar.scss";
 @use "./components/node-type.scss";
+@use "./components/sidebar.scss";
 
-@use "./custom-nodes/group-node.scss";
+@use "./custom-nodes/adjust-variable.scss";
+@use "./custom-nodes/presentation.scss";
 @use "./custom-nodes/set-variable.scss";
+@use "./custom-nodes/group-node.scss";
 @use "./custom-nodes/base-node.scss";
 
 @use "./modals/modal.scss";

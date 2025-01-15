@@ -13,7 +13,7 @@ import "@xyflow/react/dist/style.css";
 
 import Sidebar from "../Sidebar";
 import SetVariableNode from "../components/customNodes/SetVariableNode";
-import AdjustQuantityNode from "../components/customNodes/AdjustQuantityNode";
+import AdjustVariableNode from "./customNodes/AdjustVariableNode";
 import ConditionalNode from "../components/customNodes/ConditionalNode";
 import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
@@ -27,7 +27,7 @@ const nodeTypes = {
   challenge: ChallengeNode,
   conditional: ConditionalNode,
   variable: SetVariableNode,
-  adjustVariable: AdjustQuantityNode,
+  adjustVariable: AdjustVariableNode,
   removeItem: DefaultNode,
   addItem: DefaultNode,
   default: DefaultNode,
@@ -46,6 +46,8 @@ const Flow = () => {
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition, getNodes } = useReactFlow();
   const { type, nodes, setNodes, onNodesChange, contextHandles } = useFlow();
+
+  const proOptions = { hideAttribution: true };
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNodeId(node.id);
@@ -305,19 +307,20 @@ const Flow = () => {
               border: node.id === selectedNodeId ? "1px solid blue" : "",
             },
           }))}
-          edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          nodeTypes={nodeTypes}
           onNodeClick={onNodeClick}
+          onDragOver={onDragOver}
+          proOptions={proOptions}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          onDrop={onDrop}
+          edges={edges}
           fitView
         >
           <MiniMap
-            position="bottom-left"
             nodeClassName={(node) => `minimap-node-${node.type}`}
+            position="bottom-left"
             zoomable
             pannable
           />

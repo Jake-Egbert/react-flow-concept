@@ -1,6 +1,18 @@
 import { useFlow } from "../../FlowContext";
 
-const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
+const typeLabelMap = {
+  presentation: "Presentation",
+  adjustVariable: "Adjust Variable",
+  conditional: "Set Conditional",
+  variable: "Set Variable",
+  challenge: "Challenge",
+  group: "Group Items",
+  default: "Default",
+  startNode: "Start Node",
+  childNode: "Child Node",
+};
+
+const NodeTypeSelector = ({ nodeId, currentType, availableTypes, label }) => {
   const { setNodes } = useFlow();
 
   const filteredTypes =
@@ -30,7 +42,7 @@ const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
     >
       {filteredTypes.map((type) => (
         <option key={type} value={type}>
-          {type.charAt(0).toUpperCase() + type.slice(1)}
+          {typeLabelMap[type] || type.charAt(0).toUpperCase() + type.slice(1)}
         </option>
       ))}
     </select>

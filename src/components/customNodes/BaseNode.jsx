@@ -29,12 +29,12 @@ const nodeTypes = [
   },
   {
     type: "conditional",
-    label: "Conditional",
+    label: "Set Conditional",
     icon: "fa-road-circle-check",
   },
   {
     type: "variable",
-    label: "Variable",
+    label: "Set Variable",
     icon: "fa-shoe-prints",
   },
   {
@@ -245,6 +245,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
           <NodeTypeSelector
             nodeId={id}
             currentType={currentNodeType.current}
+            label={label}
             availableTypes={[
               "presentation",
               "adjustVariable",
