@@ -19,7 +19,7 @@ const PresentationNode = ({ id, data, type }) => {
   return (
     <>
       <BaseNode id={id} type={type}>
-        <div className="node-wrapper">
+        <div className="presentation-wrapper node-wrapper">
           <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
             <button onClick={handleOpenModal}>Edit</button>
           </NodeToolbar>

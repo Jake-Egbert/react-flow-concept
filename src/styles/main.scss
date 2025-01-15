@@ -1,5 +1,6 @@
 @use "./common/variables.scss";
 @use "./common/common.scss";
+@use "./common/common-node.scss";
 
 @use "./components/react-flow.scss";
 @use "./components/node-type.scss";
@@ -8,7 +9,7 @@
 @use "./custom-nodes/adjust-variable.scss";
 @use "./custom-nodes/presentation.scss";
 @use "./custom-nodes/set-variable.scss";
+@use "./custom-nodes/conditional.scss";
 @use "./custom-nodes/group-node.scss";
-@use "./custom-nodes/base-node.scss";
 
 @use "./modals/modal.scss";

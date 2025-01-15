@@ -6,7 +6,9 @@ const GroupNode = ({ id, type }) => {
     <div className="group-node">
       <NodeResizer />
       <BaseNode id={id} type={type} />
-      <input type="text" />
+      <div className="node-wrapper">
+        <input type="text" />
+      </div>
     </div>
   );
 };

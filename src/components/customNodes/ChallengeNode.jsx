@@ -19,15 +19,17 @@ const ChallengeNode = ({ id, data, type }) => {
   return (
     <>
       <BaseNode id={id} type={type}>
-        <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
-          <button onClick={handleOpenModal}>Edit</button>
-        </NodeToolbar>
+        <div className="node-wrapper">
+          <NodeToolbar isVisible={data.forceToolbarVisible || undefined}>
+            <button onClick={handleOpenModal}>Edit</button>
+          </NodeToolbar>
 
-        <select>
-          <option value="boolean">Sheriff Showdown</option>
-          <option value="text">Mind Bender</option>
-          <option value="number">Order Pictures</option>
-        </select>
+          <select>
+            <option value="boolean">Sheriff Showdown</option>
+            <option value="text">Mind Bender</option>
+            <option value="number">Order Pictures</option>
+          </select>
+        </div>
       </BaseNode>
 
       {isEditing && (
