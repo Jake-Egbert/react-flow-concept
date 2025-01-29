@@ -19,6 +19,7 @@ import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
 import ChallengeNode from "./customNodes/ChallengeNode";
 import DefaultNode from "./customNodes/DefaultNode";
+import ConnectionLine from "./customEdges/ConnectionLine";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
@@ -43,6 +44,9 @@ const Flow = () => {
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition, getNodes } = useReactFlow();
   const { type, nodes, setNodes, onNodesChange, contextHandles } = useFlow();
@@ -66,6 +70,7 @@ const Flow = () => {
 
           if (parentGroup && node.parentId !== parentGroup.id) {
             shouldUpdate = true;
+            console.log(node);
 
             return {
               ...node,
@@ -150,7 +155,7 @@ const Flow = () => {
         type: type,
         position,
         data: {
-          label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
+          label: `${type.charAt(0).toUpperCase() + type.slice(1)}`,
         },
         parentId: "",
       };
@@ -159,6 +164,14 @@ const Flow = () => {
     },
     [type, screenToFlowPosition, setNodes, contextHandles]
   );
+
+  // const onConnect = useCallback(
+  //   (connection) => {
+  //     const edge = { ...connection, className: 'my-custom-edge' };
+  //     setEdges((eds) => addEdge(edge, eds));
+  //   },
+  //   [setEdges]
+  // );
 
   const handleClick = useCallback(
     (type) => {
@@ -252,6 +265,99 @@ const Flow = () => {
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
 
+  function MiniMapNode(props) {
+    const { x, y, width, height, className, style, data } = props;
+
+    const label = data?.label || "Node";
+
+    function getSignalName(str) {
+      const lastDashIndex = str.lastIndexOf("-");
+
+      if (lastDashIndex === -1) {
+        return str;
+      }
+
+      let signalPart = str.slice(lastDashIndex + 1);
+
+      const words = signalPart.split(" ");
+
+      return words
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+        .replace(/\s+/g, "-");
+    }
+
+    return (
+      <svg
+        width={width || 100}
+        height={height || 50}
+        transform={`translate(${x}, ${y})`}
+      >
+        <rect
+          x="0"
+          y="0"
+          width={width || 100}
+          height={height || 50}
+          rx="15"
+          ry="15"
+          fill="#FFFFFF"
+          stroke="#FFA500"
+          strokeWidth="2"
+        />
+        <rect
+          x="0"
+          y="0"
+          width={width || 100}
+          height="40"
+          rx="15"
+          ry="15"
+          fill="#007D66"
+        />
+        <text
+          x={(width || 100) / 2}
+          y="25"
+          fontSize="16"
+          fontFamily="Arial, sans-serif"
+          fill="#FFFFFF"
+          textAnchor="middle"
+        >
+          {label}
+        </text>
+      </svg>
+    );
+  }
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        const response = await fetch("https://swapi.dev/api/people/1/");
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        if (isMounted) {
+          setData(result);
+          console.log(data);
+        }
+      } catch (e) {
+        if (isMounted) {
+          setError(e.message);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (!selectedNodeId) return;
@@ -307,6 +413,7 @@ const Flow = () => {
               border: node.id === selectedNodeId ? "1px solid blue" : "",
             },
           }))}
+          connectionLineComponent={ConnectionLine}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeClick={onNodeClick}
@@ -321,9 +428,13 @@ const Flow = () => {
           <MiniMap
             nodeClassName={(node) => `minimap-node-${node.type}`}
             position="bottom-left"
+            nodeBorderRadius={30}
+            nodeComponent={(nodeProps) => <MiniMapNode {...nodeProps} />}
+            type={(node) => node.type}
             zoomable
             pannable
           />
+
           <Background color="#ccc" />
           <Controls position="bottom-right" />
         </ReactFlow>

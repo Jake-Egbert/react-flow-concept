@@ -56,19 +56,23 @@
   border-bottom: 1px solid orange;
 }
 
-.react-flow__handle {
-  background-color: $peach;
-  width: 5px;
-  height: 10px;
-  border-radius: 0;
-  border: none;
-}
+// .react-flow__handle {
+//   background-color: $peach;
+//   width: 5px;
+//   height: 10px;
+//   border-radius: 0;
+//   border: none;
+// }
 
 .react-flow__panel {
+  color: blue;
+  stroke: red;
   @each $type, $color in $node-colors {
-    .minimap-node-#{$type} {
-      stroke: $color;
-      stroke-width: 8px;
+    .mini-map-node {
+      .minimap-node-#{$type} {
+        stroke: $color;
+        stroke-width: 8px;
+      }
     }
   }
 }

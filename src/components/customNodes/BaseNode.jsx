@@ -7,6 +7,7 @@ import {
 } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 import HandleModal from "../modals/HandleModal";
+import CustomHandle from "../customEdges/CustomHandle";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import NodeTypeSelector from "../flowHelpers/NodeTypeSelector";
@@ -228,7 +229,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
           );
 
           return (
-            <Handle
+            <CustomHandle
               key={handle.id}
               type={handle.type}
               position={handle.position}
