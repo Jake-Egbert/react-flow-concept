@@ -33,7 +33,7 @@ const nodeTypes = {
   addItem: DefaultNode,
   default: DefaultNode,
   group: GroupNode,
-  startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
+  startNode: (props) => <DefaultNode {...props} />,
   childNode: (props) => <DefaultNode {...props} noHandle={true} />,
 };
 
@@ -43,9 +43,6 @@ const getId = () => `node_${id++}`;
 const Flow = () => {
   const [selectedNodeId, setSelectedNodeId] = useState(null);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
 
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition, getNodes } = useReactFlow();
@@ -164,15 +161,6 @@ const Flow = () => {
     },
     [type, screenToFlowPosition, setNodes, contextHandles]
   );
-
-  // const onConnect = useCallback(
-  //   (connection) => {
-  //     const edge = { ...connection, className: 'my-custom-edge' };
-  //     setEdges((eds) => addEdge(edge, eds));
-  //   },
-  //   [setEdges]
-  // );
-
   const handleClick = useCallback(
     (type) => {
       if (!reactFlowWrapper.current || !type) return;
@@ -266,11 +254,9 @@ const Flow = () => {
   }, [setNodes]);
 
   function MiniMapNode(props) {
-    const { x, y, width, height, className, style, data } = props;
+    const { x, y, width, height, className } = props;
 
-    const label = data?.label || "Node";
-
-    function getSignalName(str) {
+    function getNodeName(str) {
       const lastDashIndex = str.lastIndexOf("-");
 
       if (lastDashIndex === -1) {
@@ -288,16 +274,12 @@ const Flow = () => {
     }
 
     return (
-      <svg
-        width={width || 100}
-        height={height || 50}
-        transform={`translate(${x}, ${y})`}
-      >
+      <svg width={width || 100} height={height || 50} x={x} y={y}>
         <rect
           x="0"
           y="0"
-          width={width || 100}
-          height={height || 50}
+          width={width || 150}
+          height={height || 100}
           rx="15"
           ry="15"
           fill="#FFFFFF"
@@ -305,58 +287,27 @@ const Flow = () => {
           strokeWidth="2"
         />
         <rect
+          className={className}
           x="0"
           y="0"
           width={width || 100}
           height="40"
           rx="15"
           ry="15"
-          fill="#007D66"
         />
         <text
           x={(width || 100) / 2}
-          y="25"
-          fontSize="16"
+          y="30"
+          fontSize="28"
           fontFamily="Arial, sans-serif"
           fill="#FFFFFF"
           textAnchor="middle"
         >
-          {label}
+          {getNodeName(className)}
         </text>
       </svg>
     );
   }
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const fetchData = async () => {
-      try {
-        const response = await fetch("https://swapi.dev/api/people/1/");
-        console.log(response);
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-
-        const result = await response.json();
-        if (isMounted) {
-          setData(result);
-          console.log(data);
-        }
-      } catch (e) {
-        if (isMounted) {
-          setError(e.message);
-        }
-      }
-    };
-
-    fetchData();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -428,8 +379,9 @@ const Flow = () => {
           <MiniMap
             nodeClassName={(node) => `minimap-node-${node.type}`}
             position="bottom-left"
-            nodeBorderRadius={30}
+            nodeBorderRadius={25}
             nodeComponent={(nodeProps) => <MiniMapNode {...nodeProps} />}
+            nodes={nodes}
             type={(node) => node.type}
             zoomable
             pannable

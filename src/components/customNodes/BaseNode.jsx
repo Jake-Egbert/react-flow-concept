@@ -84,7 +84,7 @@ const getNodeTypeConfig = (type) => {
   return nodeTypes.find((nodeType) => nodeType.type === type) || {};
 };
 
-const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
+const BaseNode = ({ id, children, type, noHandle }) => {
   const [localHandles, setLocalHandles] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -161,13 +161,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
   const handles = useMemo(() => {
     const initialHandles = [];
 
-    if (oneHandle) {
-      initialHandles.push({
-        position: Position.Right,
-        type: "source",
-        id: `${id}-right`,
-      });
-    } else if (noHandle) {
+    if (noHandle) {
       initialHandles.push({
         position: Position.Right,
         type: "source",
@@ -197,7 +191,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
     }
 
     return initialHandles;
-  }, [contextHandles, oneHandle, noHandle]);
+  }, [contextHandles, noHandle]);
 
   useEffect(() => {
     setLocalHandles(handles);

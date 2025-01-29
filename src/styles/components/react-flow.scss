@@ -12,7 +12,7 @@
 }
 
 .react-flow__node {
-  border-radius: 30px;
+  border-radius: 25px;
   padding: 0 0 20px 0;
   width: 330px;
   border: 1px solid $peach;
@@ -37,8 +37,8 @@
 
 .react-flow__controls-button {
   background-color: white;
-  color: orange;
-  border: orange 1px solid;
+  color: $peach;
+  border: $peach 1px solid;
   border-radius: 30px;
   margin: 2px;
   width: 85px;
@@ -53,27 +53,14 @@
 }
 
 .react-flow__controls-button:last-child {
-  border-bottom: 1px solid orange;
+  border-bottom: 1px solid $peach;
 }
 
-// .react-flow__handle {
-//   background-color: $peach;
-//   width: 5px;
-//   height: 10px;
-//   border-radius: 0;
-//   border: none;
-// }
-
-.react-flow__panel {
-  color: blue;
-  stroke: red;
-  @each $type, $color in $node-colors {
-    .mini-map-node {
-      .minimap-node-#{$type} {
-        stroke: $color;
-        stroke-width: 8px;
-      }
-    }
+@each $type, $color in $node-colors {
+  .minimap-node-#{$type} {
+    stroke: $color;
+    stroke-width: 8px;
+    fill: $color;
   }
 }
 
