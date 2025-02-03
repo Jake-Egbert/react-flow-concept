@@ -5,8 +5,7 @@ const FlowContext = createContext();
 const initialNodes = [
   {
     id: "node_1",
-    type: "startNode",
-    data: { label: "Start Node" },
+    type: "default",
     position: { x: 250, y: 250 },
     oneHandle: true,
   },

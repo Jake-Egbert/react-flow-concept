@@ -20,21 +20,21 @@ import PresentationNode from "./customNodes/PresentationNode";
 import ChallengeNode from "./customNodes/ChallengeNode";
 import DefaultNode from "./customNodes/DefaultNode";
 import ConnectionLine from "./customEdges/ConnectionLine";
+import RewardNode from "./customNodes/RewardNode";
+import AddRemoveNode from "./customNodes/AddRemoveNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
-  reward: DefaultNode,
+  reward: RewardNode,
   presentation: PresentationNode,
   challenge: ChallengeNode,
   conditional: ConditionalNode,
   variable: SetVariableNode,
   adjustVariable: AdjustVariableNode,
-  removeItem: DefaultNode,
-  addItem: DefaultNode,
-  default: DefaultNode,
+  removeItem: (props) => <AddRemoveNode {...props} addRemove={"remove"} />,
+  addItem: (props) => <AddRemoveNode {...props} addRemove={"add"} />,
   group: GroupNode,
-  startNode: (props) => <DefaultNode {...props} />,
-  childNode: (props) => <DefaultNode {...props} noHandle={true} />,
+  default: DefaultNode,
 };
 
 let id = 2;
@@ -194,7 +194,7 @@ const Flow = () => {
 
       const newChildNode = {
         id: newNodeId,
-        type: "childNode",
+        type: "default",
         position: {
           x: parent.position.x + 150,
           y: parent.position.y + 150,

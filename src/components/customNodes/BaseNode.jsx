@@ -1,10 +1,5 @@
 import { useState, useRef, useEffect, memo, useMemo } from "react";
-import {
-  Handle,
-  Position,
-  useUpdateNodeInternals,
-  NodeToolbar,
-} from "@xyflow/react";
+import { Position, useUpdateNodeInternals, NodeToolbar } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 import HandleModal from "../modals/HandleModal";
 import CustomHandle from "../customEdges/CustomHandle";
@@ -65,17 +60,7 @@ const nodeTypes = [
   },
   {
     type: "default",
-    label: "Default",
-    icon: "fa-arrow-right",
-  },
-  {
-    type: "startNode",
-    label: "Default",
-    icon: "fa-arrow-right",
-  },
-  {
-    type: "childNode",
-    label: "Default",
+    label: "Select Node",
     icon: "fa-arrow-right",
   },
 ];
@@ -84,7 +69,7 @@ const getNodeTypeConfig = (type) => {
   return nodeTypes.find((nodeType) => nodeType.type === type) || {};
 };
 
-const BaseNode = ({ id, children, type, noHandle }) => {
+const BaseNode = ({ id, children, type }) => {
   const [localHandles, setLocalHandles] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -161,37 +146,24 @@ const BaseNode = ({ id, children, type, noHandle }) => {
   const handles = useMemo(() => {
     const initialHandles = [];
 
-    if (noHandle) {
-      initialHandles.push({
-        position: Position.Right,
-        type: "source",
-        id: `${id}-right`,
-      });
+    if (contextHandles.left) {
       initialHandles.push({
         position: Position.Left,
         type: "target",
         id: `${id}-left`,
       });
-    } else {
-      if (contextHandles.left) {
-        initialHandles.push({
-          position: Position.Left,
-          type: "target",
-          id: `${id}-left`,
-        });
-      }
+    }
 
-      if (contextHandles.right) {
-        initialHandles.push({
-          position: Position.Right,
-          type: "source",
-          id: `${id}-right`,
-        });
-      }
+    if (contextHandles.right) {
+      initialHandles.push({
+        position: Position.Right,
+        type: "source",
+        id: `${id}-right`,
+      });
     }
 
     return initialHandles;
-  }, [contextHandles, noHandle]);
+  }, [contextHandles]);
 
   useEffect(() => {
     setLocalHandles(handles);
@@ -209,7 +181,9 @@ const BaseNode = ({ id, children, type, noHandle }) => {
     <>
       <div className="custom-node-wrapper">
         <NodeToolbar position="bottom">
-          <button onClick={handleOpenModal}>Handles</button>
+          <button className="toolbar-button" onClick={handleOpenModal}>
+            Handles
+          </button>
         </NodeToolbar>
 
         {localHandles.map((handle, index, arr) => {
@@ -248,6 +222,8 @@ const BaseNode = ({ id, children, type, noHandle }) => {
               "variable",
               "challenge",
               "group",
+              "removeItem",
+              "addItem",
             ]}
           />
         </div>

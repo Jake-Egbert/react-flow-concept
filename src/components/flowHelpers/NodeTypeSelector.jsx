@@ -1,28 +1,27 @@
 import { useFlow } from "../../FlowContext";
 
 const typeLabelMap = {
+  reward: "reward",
   presentation: "Presentation",
   adjustVariable: "Adjust Variable",
   conditional: "Set Conditional",
   variable: "Set Variable",
   challenge: "Challenge",
+  addItem: "Add Item",
+  removeItem: "Remove Item",
   group: "Group Items",
-  default: "Default",
-  startNode: "Start Node",
-  childNode: "Child Node",
+  default: "Select Node",
 };
 
-const NodeTypeSelector = ({ nodeId, currentType, availableTypes, label }) => {
+const NodeTypeSelector = ({ nodeId, currentType, availableTypes }) => {
   const { setNodes } = useFlow();
 
+  const normalizedType = currentType === "default" ? "default" : currentType;
+
   const filteredTypes =
-    currentType === "default" ||
-    currentType === "startNode" ||
-    currentType === "childNode"
+    normalizedType === "default"
       ? ["default", ...availableTypes]
-      : availableTypes.filter(
-          (type) => type !== "default" && type !== "startNode"
-        );
+      : availableTypes.filter((type) => type !== "default");
 
   const handleTypeChange = (newType) => {
     setNodes((nodes) =>
@@ -36,7 +35,7 @@ const NodeTypeSelector = ({ nodeId, currentType, availableTypes, label }) => {
 
   return (
     <select
-      value={currentType}
+      value={normalizedType}
       onChange={(e) => handleTypeChange(e.target.value)}
       className="node-type-dropdown"
     >

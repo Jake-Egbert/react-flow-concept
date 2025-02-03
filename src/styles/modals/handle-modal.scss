@@ -1,0 +1,41 @@
+.handle-modal {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  .close-button {
+    position: absolute;
+    border: none;
+    padding: 10 0;
+    top: 0;
+    right: 0;
+    width: fit-content;
+    transition: all 0.3s;
+
+    &:hover {
+      cursor: pointer;
+      transform: scale(0.8);
+    }
+  }
+
+  .input-wrapper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px;
+
+    input {
+      padding: 0;
+      margin: 0;
+      margin-left: 7px;
+    }
+  }
+
+  .button-wrapper {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+}
