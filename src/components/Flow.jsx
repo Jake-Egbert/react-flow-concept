@@ -31,10 +31,23 @@ const nodeTypes = {
   conditional: ConditionalNode,
   variable: SetVariableNode,
   adjustVariable: AdjustVariableNode,
-  removeItem: (props) => <AddRemoveNode {...props} addRemove={"remove"} />,
-  addItem: (props) => <AddRemoveNode {...props} addRemove={"add"} />,
+  removeItem: (props) => <AddRemoveNode {...props} addRemove={"Remove"} />,
+  addItem: (props) => <AddRemoveNode {...props} addRemove={"Add"} />,
   group: GroupNode,
   default: DefaultNode,
+};
+
+const typeLabelMap = {
+  reward: "reward",
+  presentation: "Presentation",
+  adjustVariable: "Adjust Variable",
+  conditional: "Set Conditional",
+  variable: "Set Variable",
+  challenge: "Challenge",
+  addItem: "Add Item",
+  removeItem: "Remove Item",
+  group: "Group Items",
+  default: "Select Node",
 };
 
 let id = 2;
@@ -265,36 +278,41 @@ const Flow = () => {
 
       let signalPart = str.slice(lastDashIndex + 1);
 
-      const words = signalPart.split(" ");
-
-      return words
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ")
-        .replace(/\s+/g, "-");
+      return signalPart;
     }
 
     return (
       <svg width={width || 100} height={height || 50} x={x} y={y}>
-        <rect
-          x="0"
-          y="0"
-          width={width || 150}
-          height={height || 100}
-          rx="15"
-          ry="15"
+        <path
+          d={`
+            M 15,0 
+            H ${width - 15} 
+            A 15,15 0 0 1 ${width},15 
+            V ${height} 
+            H 0 
+            V 15 
+            A 15,15 0 0 1 15,0 
+            Z
+          `}
           fill="#FFFFFF"
           stroke="#FFA500"
           strokeWidth="2"
         />
-        <rect
+
+        <path
+          d={`
+            M 15,0 
+            H ${width - 15} 
+            A 15,15 0 0 1 ${width},15 
+            V 40 
+            H 0 
+            V 15 
+            A 15,15 0 0 1 15,0 
+            Z
+            `}
           className={className}
-          x="0"
-          y="0"
-          width={width || 100}
-          height="40"
-          rx="15"
-          ry="15"
         />
+
         <text
           x={(width || 100) / 2}
           y="30"
@@ -303,7 +321,7 @@ const Flow = () => {
           fill="#FFFFFF"
           textAnchor="middle"
         >
-          {getNodeName(className)}
+          {typeLabelMap[getNodeName(className)]}
         </text>
       </svg>
     );

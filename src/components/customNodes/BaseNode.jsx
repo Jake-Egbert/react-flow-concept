@@ -226,6 +226,11 @@ const BaseNode = ({ id, children, type }) => {
               "addItem",
             ]}
           />
+          {type === "group" ? (
+            <input type="text" className="group-title" />
+          ) : (
+            ""
+          )}
         </div>
 
         {children}

@@ -18,6 +18,10 @@
     }
   }
 
+  .group-title {
+    max-width: 250px;
+  }
+
   @each $type, $color in $node-colors {
     .#{$type} {
       background-color: $color;

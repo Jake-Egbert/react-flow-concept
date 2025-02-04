@@ -6,7 +6,7 @@ const AddRemoveNode = ({ id, type, addRemove }) => {
   console.log(type);
   return (
     <BaseNode id={id} type={type}>
-      <div className="set-variable-wrapper node-wrapper">
+      <div className="add-remove-wrapper node-wrapper">
         <div className="top-wrapper">
           <select>
             <option value="boolean">food supply</option>
