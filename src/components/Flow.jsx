@@ -19,7 +19,6 @@ import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
 import ChallengeNode from "./customNodes/ChallengeNode";
 import DefaultNode from "./customNodes/DefaultNode";
-import ConnectionLine from "./customEdges/ConnectionLine";
 import RewardNode from "./customNodes/RewardNode";
 import AddRemoveNode from "./customNodes/AddRemoveNode";
 import { useFlow } from "../FlowContext";
@@ -382,7 +381,6 @@ const Flow = () => {
               border: node.id === selectedNodeId ? "1px solid blue" : "",
             },
           }))}
-          connectionLineComponent={ConnectionLine}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onNodeClick={onNodeClick}
