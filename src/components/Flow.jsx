@@ -5,32 +5,48 @@ import {
   Controls,
   useReactFlow,
   Background,
-  BackgroundVariant,
   Position,
   useEdgesState,
+  MiniMap,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 
 import Sidebar from "../Sidebar";
 import SetVariableNode from "../components/customNodes/SetVariableNode";
-import AdjustQuantityNode from "../components/customNodes/AdjustQuantityNode";
+import AdjustVariableNode from "./customNodes/AdjustVariableNode";
 import ConditionalNode from "../components/customNodes/ConditionalNode";
 import GroupNode from "../components/customNodes/GroupNode";
 import PresentationNode from "./customNodes/PresentationNode";
 import ChallengeNode from "./customNodes/ChallengeNode";
 import DefaultNode from "./customNodes/DefaultNode";
+import RewardNode from "./customNodes/RewardNode";
+import AddRemoveNode from "./customNodes/AddRemoveNode";
 import { useFlow } from "../FlowContext";
 
 const nodeTypes = {
-  adjustQuantity: AdjustQuantityNode,
+  reward: RewardNode,
   presentation: PresentationNode,
-  conditional: ConditionalNode,
-  setVariable: SetVariableNode,
-  startNode: (props) => <DefaultNode {...props} oneHandle={true} />,
-  childNode: (props) => <DefaultNode {...props} noHandle={true} />,
   challenge: ChallengeNode,
-  default: DefaultNode,
+  conditional: ConditionalNode,
+  variable: SetVariableNode,
+  adjustVariable: AdjustVariableNode,
+  removeItem: (props) => <AddRemoveNode {...props} addRemove={"Remove"} />,
+  addItem: (props) => <AddRemoveNode {...props} addRemove={"Add"} />,
   group: GroupNode,
+  default: DefaultNode,
+};
+
+const typeLabelMap = {
+  reward: "reward",
+  presentation: "Presentation",
+  adjustVariable: "Adjust Variable",
+  conditional: "Set Conditional",
+  variable: "Set Variable",
+  challenge: "Challenge",
+  addItem: "Add Item",
+  removeItem: "Remove Item",
+  group: "Group Items",
+  default: "Select Node",
 };
 
 let id = 2;
@@ -43,6 +59,8 @@ const Flow = () => {
   const reactFlowWrapper = useRef(null);
   const { screenToFlowPosition, getNodes } = useReactFlow();
   const { type, nodes, setNodes, onNodesChange, contextHandles } = useFlow();
+
+  const proOptions = { hideAttribution: true };
 
   const onNodeClick = useCallback((event, node) => {
     setSelectedNodeId(node.id);
@@ -61,6 +79,7 @@ const Flow = () => {
 
           if (parentGroup && node.parentId !== parentGroup.id) {
             shouldUpdate = true;
+            console.log(node);
 
             return {
               ...node,
@@ -112,7 +131,13 @@ const Flow = () => {
   }, []);
 
   const onConnect = useCallback(
-    (params) => setEdges((eds) => addEdge(params, eds)),
+    (params) =>
+      setEdges((eds) =>
+        addEdge(
+          { ...params, style: { stroke: "#fec797", strokeWidth: 1 } },
+          eds
+        )
+      ),
     []
   );
 
@@ -139,7 +164,7 @@ const Flow = () => {
         type: type,
         position,
         data: {
-          label: `${type.charAt(0).toUpperCase() + type.slice(1)} node`,
+          label: `${type.charAt(0).toUpperCase() + type.slice(1)}`,
         },
         parentId: "",
       };
@@ -148,7 +173,6 @@ const Flow = () => {
     },
     [type, screenToFlowPosition, setNodes, contextHandles]
   );
-
   const handleClick = useCallback(
     (type) => {
       if (!reactFlowWrapper.current || !type) return;
@@ -182,7 +206,7 @@ const Flow = () => {
 
       const newChildNode = {
         id: newNodeId,
-        type: "childNode",
+        type: "default",
         position: {
           x: parent.position.x + 150,
           y: parent.position.y + 150,
@@ -220,6 +244,8 @@ const Flow = () => {
           target: newNodeId,
           sourceHandle: `${parentId}-right`,
           targetHandle: `${newNodeId}-left`,
+          className: "custom-edge",
+          style: { stroke: "#fec797", strokeWidth: 1 },
         };
 
         setEdges((eds) => addEdge(newEdge, eds));
@@ -238,6 +264,67 @@ const Flow = () => {
 
     setNodes((nds) => nds.concat(newNode));
   }, [setNodes]);
+
+  function MiniMapNode(props) {
+    const { x, y, width, height, className } = props;
+
+    function getNodeName(str) {
+      const lastDashIndex = str.lastIndexOf("-");
+
+      if (lastDashIndex === -1) {
+        return str;
+      }
+
+      let signalPart = str.slice(lastDashIndex + 1);
+
+      return signalPart;
+    }
+
+    return (
+      <svg width={width || 100} height={height || 50} x={x} y={y}>
+        <path
+          d={`
+            M 15,0 
+            H ${width - 15} 
+            A 15,15 0 0 1 ${width},15 
+            V ${height} 
+            H 0 
+            V 15 
+            A 15,15 0 0 1 15,0 
+            Z
+          `}
+          fill="#FFFFFF"
+          stroke="#FFA500"
+          strokeWidth="2"
+        />
+
+        <path
+          d={`
+            M 15,0 
+            H ${width - 15} 
+            A 15,15 0 0 1 ${width},15 
+            V 40 
+            H 0 
+            V 15 
+            A 15,15 0 0 1 15,0 
+            Z
+            `}
+          className={className}
+        />
+
+        <text
+          x={(width || 100) / 2}
+          y="30"
+          fontSize="28"
+          fontFamily="Arial, sans-serif"
+          fill="#FFFFFF"
+          textAnchor="middle"
+        >
+          {typeLabelMap[getNodeName(className)]}
+        </text>
+      </svg>
+    );
+  }
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -291,24 +378,33 @@ const Flow = () => {
           nodes={nodes.map((node) => ({
             ...node,
             style: {
-              border:
-                node.id === selectedNodeId
-                  ? "2px solid blue"
-                  : "1px solid black",
+              border: node.id === selectedNodeId ? "1px solid blue" : "",
             },
           }))}
-          edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onConnect={onConnect}
-          onDrop={onDrop}
-          onDragOver={onDragOver}
-          nodeTypes={nodeTypes}
           onNodeClick={onNodeClick}
+          onDragOver={onDragOver}
+          proOptions={proOptions}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          onDrop={onDrop}
+          edges={edges}
           fitView
         >
-          <Background color="#ccc" variant={BackgroundVariant.Dots} />
-          <Controls />
+          <MiniMap
+            nodeClassName={(node) => `minimap-node-${node.type}`}
+            position="bottom-left"
+            nodeBorderRadius={25}
+            nodeComponent={(nodeProps) => <MiniMapNode {...nodeProps} />}
+            nodes={nodes}
+            type={(node) => node.type}
+            zoomable
+            pannable
+          />
+
+          <Background color="#ccc" />
+          <Controls position="bottom-right" />
         </ReactFlow>
       </div>
     </div>

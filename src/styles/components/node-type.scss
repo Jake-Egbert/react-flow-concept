@@ -1,0 +1,21 @@
+.node-type-dropdown {
+  color: white;
+  border: none;
+  background: none;
+  padding: 0 1px;
+  font-size: 1rem;
+  cursor: pointer;
+  appearance: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
+.chevron-icon {
+  pointer-events: none;
+}

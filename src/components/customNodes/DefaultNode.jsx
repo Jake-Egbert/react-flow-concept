@@ -3,12 +3,12 @@ import { memo } from "react";
 import BaseNode from "./BaseNode";
 import { Handle } from "@xyflow/react";
 
-const DefaultNode = ({ id, type, oneHandle, noHandle }) => {
+const DefaultNode = ({ id, type }) => {
   return (
     <>
-      {oneHandle && <Handle type="source" position="right" />}
-      <BaseNode id={id} type={type} oneHandle={oneHandle} noHandle={noHandle}>
-        <h3>Default</h3>
+      {<Handle type="source" position="right" />}
+      <BaseNode id={id} type={type}>
+        <p>click on default on the header to change the node</p>
       </BaseNode>
     </>
   );

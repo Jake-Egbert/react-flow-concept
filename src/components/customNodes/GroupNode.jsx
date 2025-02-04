@@ -4,9 +4,16 @@ import BaseNode from "./BaseNode";
 const GroupNode = ({ id, type }) => {
   return (
     <div className="group-node">
-      <NodeResizer />
+      <NodeResizer
+        handleStyle={{ opacity: 0 }}
+        lineStyle={{ opacity: 0 }}
+        minWidth={240}
+        minHeight={70}
+      />
       <BaseNode id={id} type={type} />
-      <input type="text" />
+      <div className="node-wrapper">
+        <input type="text" />
+      </div>
     </div>
   );
 };

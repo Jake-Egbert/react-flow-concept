@@ -1,66 +1,79 @@
 import { useFlow } from "./FlowContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
+const nodeTypes = [
+  {
+    type: "reward",
+    label: "Reward",
+    icon: "fa-award",
+  },
+  {
+    type: "presentation",
+    label: "Presentation",
+    icon: "fa-person-chalkboard",
+  },
+  {
+    type: "challenge",
+    label: "Challenge",
+    icon: "fa-person-hiking",
+  },
+  {
+    type: "conditional",
+    label: "Conditional",
+    icon: "fa-road-circle-check",
+  },
+  {
+    type: "variable",
+    label: "Variable",
+    icon: "fa-shoe-prints",
+  },
+  {
+    type: "adjustVariable",
+    label: "Adjust Variable",
+    icon: "fa-plus-minus",
+  },
+  {
+    type: "removeItem",
+    label: "Remove Item",
+    icon: "fa-heart-circle-minus",
+  },
+  {
+    type: "addItem",
+    label: "Add Item",
+    icon: "fa-heart-circle-plus",
+  },
+  {
+    type: "group",
+    label: "Group Items",
+    icon: "fa-object-group",
+  },
+  {
+    type: "storyline",
+    label: "Link to Storyline",
+    icon: "fa-mountain-city",
+  },
+];
 
 export default function Sidebar({ handleClick }) {
-  const { setType, setContextHandles, contextHandles } = useFlow();
-
-  const handleChange = (e) => {
-    const { name } = e.target;
-    setContextHandles((prevState) => ({
-      ...prevState,
-      [name]: !prevState[name],
-    }));
-  };
+  const { setType } = useFlow();
 
   const onDragStart = (event, nodeType) => {
     setType(nodeType);
     event.dataTransfer.effectAllowed = "move";
   };
 
-  const nodeTypes = [
-    "setVariable",
-    "adjustQuantity",
-    "conditional",
-    "group",
-    "presentation",
-    "challenge",
-  ];
-
   return (
-    <div>
-      <div className="description">
-        You can drag these nodes to the pane on the right.
-      </div>
-      <div className="handles-container">
-        <div className="description">Handles on nodes</div>
-        <div>
-          <label>Left: </label>
-          <input
-            type="checkbox"
-            name="left"
-            onChange={handleChange}
-            checked={contextHandles.left}
-          />
-        </div>
-        <div>
-          <label>right: </label>
-          <input
-            type="checkbox"
-            name="right"
-            onChange={handleChange}
-            checked={contextHandles.right}
-          />
-        </div>
-      </div>
-
-      {nodeTypes.map((type) => (
+    <div className="sidebar-container">
+      {nodeTypes.map(({ type, label, icon }) => (
         <div
           key={type}
-          className={`dndnode ${type}`}
+          className={`node-wrapper ${type}`}
           onClick={() => handleClick(type)}
           onDragStart={(event) => onDragStart(event, type)}
           draggable
         >
-          {type.charAt(0).toUpperCase() + type.slice(1)} Node
+          <FontAwesomeIcon icon={`fa-solid ${icon}`} className="node-icon" />
+          {label}
         </div>
       ))}
     </div>

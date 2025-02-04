@@ -1,0 +1,25 @@
+.adjust-node-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .buttons-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+
+    button {
+      font-size: 20px;
+
+      input {
+        text-align: center;
+      }
+
+      &:first-of-type {
+        background-color: orange;
+        color: white;
+      }
+    }
+  }
+}

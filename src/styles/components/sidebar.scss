@@ -1,0 +1,32 @@
+@use "../common/variables.scss" as *;
+
+.sidebar-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 30px;
+  gap: 15px;
+  border-right: 1px solid $peach;
+
+  .node-wrapper {
+    border: 1px solid $peach;
+    height: 60px;
+    padding: 4px;
+    border-radius: 22px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    gap: 10px;
+
+    @each $type, $color in $node-colors {
+      &.#{$type} {
+        .node-icon {
+          color: $color;
+          transform: scale(1.7);
+        }
+      }
+    }
+  }
+}

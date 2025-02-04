@@ -68,7 +68,7 @@ const QRScanner = () => {
   }, [cameraIsOpen, scanQRCode]);
 
   return (
-    <>
+    <div className="qr-scan-container">
       <button
         className="qr-scanner"
         onClick={() => setCameraIsOpen((prev) => !prev)}
@@ -88,7 +88,7 @@ const QRScanner = () => {
           <canvas ref={screenshotRef} style={{ display: "none" }}></canvas>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

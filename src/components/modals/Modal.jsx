@@ -1,8 +1,6 @@
 import Modal from "react-modal";
 import { useHistory } from "react-router-dom";
 
-import "../../styles/modals/modal.css";
-
 export default function CustomModal({ isOpen, onRequestClose, endpoint }) {
   const history = useHistory();
 

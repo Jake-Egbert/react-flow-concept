@@ -6,8 +6,11 @@ import Modal from "react-modal";
 
 import { FlowProvider } from "./FlowContext.jsx";
 import App from "./App.jsx";
-import "./index.css";
+import icons from "./assets/icons/icons.js";
 
+import "./styles/main.scss";
+
+icons();
 Modal.setAppElement("#root");
 
 createRoot(document.getElementById("root")).render(

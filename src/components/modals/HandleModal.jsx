@@ -1,8 +1,6 @@
 import Modal from "react-modal";
 import { useState } from "react";
 
-import "../../styles/modals/modal.css";
-
 export default function HandleModal({
   isOpen,
   onRequestClose,
@@ -29,7 +27,7 @@ export default function HandleModal({
       onRequestClose={onRequestClose}
       contentLabel="Manage Handles"
       className={{
-        base: "modal-base",
+        base: "modal-base handle-modal",
         afterOpen: "modal-base_after-open",
         beforeClose: "modal-base_before-close",
       }}
@@ -40,30 +38,33 @@ export default function HandleModal({
       }}
       shouldCloseOnOverlayClick={true}
     >
+      <button className="close-button" onClick={onRequestClose}>
+        X
+      </button>
       <h3>Manage Handles</h3>
-      <div>
-        <label>
-          <input
-            type="radio"
-            name="side"
-            value="right"
-            checked={selectedSide === "right"}
-            onChange={handleSideChange}
-          />
-          Right
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="side"
-            value="left"
-            checked={selectedSide === "left"}
-            onChange={handleSideChange}
-          />
-          Left
-        </label>
+      <div className="input-wrapper">
+        <label htmlFor="right">Right:</label>
+        <input
+          type="radio"
+          name="side"
+          value="right"
+          id="right"
+          checked={selectedSide === "right"}
+          onChange={handleSideChange}
+        />
       </div>
-      <div>
+      <div className="input-wrapper">
+        <label htmlFor="left">Left: </label>
+        <input
+          type="radio"
+          name="side"
+          value="left"
+          id="left"
+          checked={selectedSide === "left"}
+          onChange={handleSideChange}
+        />
+      </div>
+      <div className="button-wrapper">
         <button type="button" onClick={removeHandle}>
           -
         </button>
@@ -71,9 +72,6 @@ export default function HandleModal({
           +
         </button>
       </div>
-      <button type="button" onClick={onRequestClose}>
-        Close
-      </button>
     </Modal>
   );
 }

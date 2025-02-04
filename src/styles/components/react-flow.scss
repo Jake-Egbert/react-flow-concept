@@ -1,0 +1,81 @@
+@use "../common/variables.scss" as *;
+
+.node-wrapper {
+  padding: 10px 15px;
+}
+
+.dndflow {
+  flex-direction: column;
+  display: flex;
+  flex-grow: 1;
+  height: 100%;
+}
+
+.react-flow__node {
+  border-radius: 25px;
+  padding: 0 0 20px 0;
+  width: 330px;
+  border: 1px solid $peach;
+  background-color: white;
+  min-height: 100px;
+  min-width: 300px;
+}
+
+.dndflow .reactflow-wrapper {
+  flex-grow: 1;
+  height: 100vh;
+}
+
+.react-flow__controls {
+  background-color: #fff;
+  opacity: 80%;
+  box-shadow: inset 0px 0px 29px 15px rgba(255, 255, 255, 1);
+  border-radius: 8px;
+  padding: 5px;
+  margin-bottom: 25px;
+}
+
+.react-flow__controls-button {
+  background-color: white;
+  color: $peach;
+  border: $peach 1px solid;
+  border-radius: 30px;
+  margin: 2px;
+  width: 85px;
+  height: 50px;
+
+  svg {
+    max-width: 25px;
+    max-height: 25px;
+    width: 25px;
+    height: 25px;
+  }
+}
+
+.react-flow__controls-button:last-child {
+  border-bottom: 1px solid $peach;
+}
+
+.toolbar-button {
+  font-size: 13px;
+  cursor: pointer;
+}
+
+@each $type, $color in $node-colors {
+  .minimap-node-#{$type} {
+    stroke: $color;
+    stroke-width: 8px;
+    fill: $color;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .dndflow {
+    flex-direction: row;
+  }
+
+  .dndflow aside {
+    width: 20%;
+    max-width: 250px;
+  }
+}

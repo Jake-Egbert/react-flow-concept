@@ -1,16 +1,75 @@
 import { useState, useRef, useEffect, memo, useMemo } from "react";
-import {
-  Handle,
-  Position,
-  useUpdateNodeInternals,
-  NodeToolbar,
-} from "@xyflow/react";
+import { Position, useUpdateNodeInternals, NodeToolbar } from "@xyflow/react";
 import { useFlow } from "../../FlowContext";
 import HandleModal from "../modals/HandleModal";
+import CustomHandle from "../customEdges/CustomHandle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 import NodeTypeSelector from "../flowHelpers/NodeTypeSelector";
 
-const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
+const nodeTypes = [
+  {
+    type: "reward",
+    label: "Reward",
+    icon: "fa-award",
+  },
+  {
+    type: "presentation",
+    label: "Presentation",
+    icon: "fa-person-chalkboard",
+  },
+  {
+    type: "challenge",
+    label: "Challenge",
+    icon: "fa-person-hiking",
+  },
+  {
+    type: "conditional",
+    label: "Set Conditional",
+    icon: "fa-road-circle-check",
+  },
+  {
+    type: "variable",
+    label: "Set Variable",
+    icon: "fa-shoe-prints",
+  },
+  {
+    type: "adjustVariable",
+    label: "Adjust Variable",
+    icon: "fa-plus-minus",
+  },
+  {
+    type: "removeItem",
+    label: "Remove Item",
+    icon: "fa-heart-circle-minus",
+  },
+  {
+    type: "addItem",
+    label: "Add Item",
+    icon: "fa-heart-circle-plus",
+  },
+  {
+    type: "group",
+    label: "Group Items",
+    icon: "fa-object-group",
+  },
+  {
+    type: "storyline",
+    label: "Link to Storyline",
+    icon: "fa-mountain-city",
+  },
+  {
+    type: "default",
+    label: "Select Node",
+    icon: "fa-arrow-right",
+  },
+];
+
+const getNodeTypeConfig = (type) => {
+  return nodeTypes.find((nodeType) => nodeType.type === type) || {};
+};
+
+const BaseNode = ({ id, children, type }) => {
   const [localHandles, setLocalHandles] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -18,6 +77,8 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
   const updateNodeInternals = useUpdateNodeInternals();
 
   let currentNodeType = useRef(type);
+
+  const { label, icon } = getNodeTypeConfig(type);
 
   const handleOpenModal = () => {
     if (!isEditing) {
@@ -85,43 +146,24 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
   const handles = useMemo(() => {
     const initialHandles = [];
 
-    if (oneHandle) {
-      initialHandles.push({
-        position: Position.Right,
-        type: "source",
-        id: `${id}-right`,
-      });
-    } else if (noHandle) {
-      initialHandles.push({
-        position: Position.Right,
-        type: "source",
-        id: `${id}-right`,
-      });
+    if (contextHandles.left) {
       initialHandles.push({
         position: Position.Left,
         type: "target",
         id: `${id}-left`,
       });
-    } else {
-      if (contextHandles.left) {
-        initialHandles.push({
-          position: Position.Left,
-          type: "target",
-          id: `${id}-left`,
-        });
-      }
+    }
 
-      if (contextHandles.right) {
-        initialHandles.push({
-          position: Position.Right,
-          type: "source",
-          id: `${id}-right`,
-        });
-      }
+    if (contextHandles.right) {
+      initialHandles.push({
+        position: Position.Right,
+        type: "source",
+        id: `${id}-right`,
+      });
     }
 
     return initialHandles;
-  }, [contextHandles, oneHandle, noHandle]);
+  }, [contextHandles]);
 
   useEffect(() => {
     setLocalHandles(handles);
@@ -137,23 +179,13 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
 
   return (
     <>
-      <div className="text-updater-node">
+      <div className="custom-node-wrapper">
         <NodeToolbar position="bottom">
-          <button onClick={handleOpenModal}>Handles</button>
+          <button className="toolbar-button" onClick={handleOpenModal}>
+            Handles
+          </button>
         </NodeToolbar>
 
-        <NodeTypeSelector
-          nodeId={id}
-          currentType={currentNodeType.current}
-          availableTypes={[
-            "presentation",
-            "adjustQuantity",
-            "conditional",
-            "setVariable",
-            "challenge",
-            "group",
-          ]}
-        />
         {localHandles.map((handle, index, arr) => {
           const handleCount = arr.filter(
             (h) => h.position === handle.position
@@ -165,7 +197,7 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
           );
 
           return (
-            <Handle
+            <CustomHandle
               key={handle.id}
               type={handle.type}
               position={handle.position}
@@ -174,6 +206,33 @@ const BaseNode = ({ id, children, type, oneHandle, noHandle }) => {
             />
           );
         })}
+
+        <div className={`node-header ${type}`}>
+          {icon && (
+            <FontAwesomeIcon icon={`fa-solid ${icon}`} className="node-icon" />
+          )}
+          <NodeTypeSelector
+            nodeId={id}
+            currentType={currentNodeType.current}
+            label={label}
+            availableTypes={[
+              "presentation",
+              "adjustVariable",
+              "conditional",
+              "variable",
+              "challenge",
+              "group",
+              "removeItem",
+              "addItem",
+            ]}
+          />
+          {type === "group" ? (
+            <input type="text" className="group-title" />
+          ) : (
+            ""
+          )}
+        </div>
+
         {children}
       </div>
       {isEditing && (

@@ -1,0 +1,40 @@
+@use "../common/variables.scss" as *;
+
+.custom-node-wrapper {
+  .node-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+    gap: 10px;
+    color: white;
+
+    select {
+      width: fit-content;
+    }
+
+    .node-icon {
+      font-size: 20px;
+    }
+  }
+
+  .group-title {
+    max-width: 250px;
+  }
+
+  @each $type, $color in $node-colors {
+    .#{$type} {
+      background-color: $color;
+      border-radius: 25px 25px 0 0;
+    }
+  }
+}
+
+.node-wrapper {
+  .bottom-wrapper,
+  .top-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}

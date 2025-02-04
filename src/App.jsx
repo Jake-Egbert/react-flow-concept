@@ -5,8 +5,7 @@ import { useHistory } from "react-router-dom";
 import Flow from "./components/Flow";
 import ChallengePage from "./components/pages/ChallengePage";
 import PresentationPage from "./components/pages/PresentationPage";
-import "./styles/custom-nodes/set-variable.css";
-import QRScanner from "./QRScanner";
+import QRScanner from "./components/QRScanner";
 
 const App = () => {
   const history = useHistory();
